@@ -72,7 +72,6 @@ class Chat extends React.Component {
     }
 
     login = (name) => {
-        console.log("hash:", this.state.user, this.state.user.hash)
         let user = {
             name,
             hash: this.state.user.hash,
@@ -80,11 +79,9 @@ class Chat extends React.Component {
         console.log(`Logging user:`, user)
 
         ChatApi.UserLogin(user, (user) => {
-            console.log(`user logged`, user)
-            this.setState({
-                user,
+            this.setState((prevState) => {
+                return { user: Object.assign({}, { ...prevState.user }, user) }
             })
-            console.log("state: ", this.state.user)
             // TODO update cookies
         })
     }
