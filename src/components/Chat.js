@@ -30,17 +30,17 @@ class Chat extends React.Component {
         ChatApi.GetClientID((data) => {
             this.clientID = data.clientID
             console.log(`Got clientID: ${this.clientID}, starting long poll...`)
-            this.startPolling();
+            this.startPollMessages();
         })
 
     }
 
-    startPolling = () => {
-        ChatApi.PollMessage(this.clientID, (message) => {
+    startPollMessages = () => {
+        ChatApi.PollMessages(this.clientID, (message) => {
             console.log(`Got new message`, message)
             this.appendMessage(message)
         }).then(() => {
-            this.startPolling(this.clientID)
+            this.startPollMessages(this.clientID)
         })
     }
 

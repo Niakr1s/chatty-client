@@ -41,7 +41,7 @@ export function GetLastNMessages(n, onData) {
     })
 }
 
-export function PollMessage(clientID, onData) {
+export function PollMessages(clientID, onData) {
     return axios.get(prefix + `/api/pollMessage/${clientID}`, {}).then((response) => {
         // console.log("PollMessage succesful", response);
         if (onData) onData(response.data)
