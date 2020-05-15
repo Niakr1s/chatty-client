@@ -61,13 +61,15 @@ class Chat extends React.Component {
 
     logout = () => {
         console.log(`Logouting user:`, this.state.user)
-        this.setState((prevState) => {
-            return {
-                user: {
-                    name: "",
-                    hash: prevState.user.hash,
+
+        ChatApi.UserLogout(this.state.user, () => {
+            this.setState((prevState) => {
+                return {
+                    user: Object.assign({}, prevState.user, {
+                        name: "",
+                    })
                 }
-            }
+            })
         })
     }
 

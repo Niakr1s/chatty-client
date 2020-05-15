@@ -59,12 +59,20 @@ export function PollUserActions(clientID, onData) {
     })
 }
 
-
 export function UserLogin(user, onData) {
     return axios.post(prefix + `/api/login`, user).then((response) => {
         // console.log("PollUserActions succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
         console.log("couldn't login user", user, error)
+    })
+}
+
+export function UserLogout(user, onData) {
+    return axios.post(prefix + `/api/logout`, user).then((response) => {
+        // console.log("PollUserActions succesful", response);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("couldn't logout user", user, error)
     })
 }
