@@ -49,3 +49,12 @@ export function PollMessages(clientID, onData) {
         console.log("not an error, jsut message poll timeout")
     })
 }
+
+export function PollUserActions(clientID, onData) {
+    return axios.get(prefix + `/api/pollUserActions/${clientID}`, {}).then((response) => {
+        // console.log("PollUserActions succesful", response);
+        if (onData) onData(response.data)
+    }).catch(() => {
+        console.log("not an error, jsut users actions poll timeout")
+    })
+}

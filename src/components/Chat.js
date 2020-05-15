@@ -17,6 +17,7 @@ class Chat extends React.Component {
         this.state = {
             user: this.props.user,
             messages: [],
+            activeUsers: [],
         }
     }
 
@@ -31,9 +32,20 @@ class Chat extends React.Component {
             this.clientID = data.clientID
             console.log(`Got clientID: ${this.clientID}, starting long poll...`)
             this.startPollMessages();
+            this.startPollUserActions();
         })
 
     }
+
+    startPollUserActions = () => {
+        ChatApi.PollUserActions(this.clientID, (userAction) => {
+            console.log(`Got new user action`, userAction)
+            this.appendUserAction(userAction)
+        }).then(() => {
+            this.startPollUserActions();
+        })
+    }
+
 
     startPollMessages = () => {
         ChatApi.PollMessages(this.clientID, (message) => {
@@ -69,6 +81,22 @@ class Chat extends React.Component {
         });
     }
 
+    appendUserAction = (userAction) => {
+        this.setState((prevState, props) => {
+            let activeUsers = [...prevState.activeUsers];
+
+            if (userAction.action === "login") {
+                activeUsers.push(userAction.name);
+            } else if (userAction.action === "logout") {
+                activeUsers.filter((it) => it !== userAction.name)
+            }
+
+            activeUsers.sort().filter((name) => name !== prevState.user);
+
+            return { activeUsers };
+        })
+    }
+
     appendMessage = (message) => {
         this.setState((prevState, props) => {
             let messages = this.state.messages.filter((it) => it.id !== message.id)
@@ -95,7 +123,7 @@ class Chat extends React.Component {
                         onPostMessage={this.postMessage}
                     ></ChatInput>
                 </div >
-                <ChatUserList></ChatUserList>
+                <ChatUserList activeUsers={this.state.activeUsers}></ChatUserList>
             </div>
         )
     }
