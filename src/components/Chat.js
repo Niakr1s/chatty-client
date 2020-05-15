@@ -104,16 +104,23 @@ class Chat extends React.Component {
         this.setState((prevState, props) => {
             let activeUsers = [...prevState.activeUsers];
 
+            let user = { ...prevState.user }
+
             if (userAction.action === "login") {
                 activeUsers.push(userAction.name);
             } else if (userAction.action === "logout") {
                 activeUsers = activeUsers.filter((it) => it !== userAction.name)
+
+                // if it is our username = logout!
+                if (userAction.name === this.state.user.name) {
+                    user.name = ""
+                }
             }
 
             activeUsers = activeUsers.filter((name) => name !== prevState.user.name);
             activeUsers.sort();
 
-            return { activeUsers };
+            return { activeUsers, user };
         })
     }
 
