@@ -88,10 +88,11 @@ class Chat extends React.Component {
             if (userAction.action === "login") {
                 activeUsers.push(userAction.name);
             } else if (userAction.action === "logout") {
-                activeUsers.filter((it) => it !== userAction.name)
+                activeUsers = activeUsers.filter((it) => it !== userAction.name)
             }
 
-            activeUsers.sort().filter((name) => name !== prevState.user);
+            activeUsers = activeUsers.filter((name) => name !== prevState.user);
+            activeUsers.sort();
 
             return { activeUsers };
         })
