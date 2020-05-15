@@ -31,6 +31,14 @@ class Chat extends React.Component {
             })
         });
 
+        ChatApi.GetLoggedUsers((users) => {
+            this.setState((prevState) => {
+                return {
+                    loggedUsers: users.sort(),
+                }
+            })
+        })
+
         ChatApi.GetClientID((data) => {
             this.clientID = data.clientID
             console.log(`Got clientID: ${this.clientID}, starting long poll...`)

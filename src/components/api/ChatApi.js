@@ -61,7 +61,7 @@ export function PollUserActions(clientID, onData) {
 
 export function UserLogin(user, onData) {
     return axios.post(prefix + `/api/login`, user).then((response) => {
-        // console.log("PollUserActions succesful", response);
+        // console.log("UserLogin succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
         console.log("couldn't login user", user, error)
@@ -70,7 +70,7 @@ export function UserLogin(user, onData) {
 
 export function UserLogout(user, onData) {
     return axios.post(prefix + `/api/logout`, user).then((response) => {
-        // console.log("PollUserActions succesful", response);
+        // console.log("UserLogout succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
         console.log("couldn't logout user", user, error)
@@ -79,9 +79,18 @@ export function UserLogout(user, onData) {
 
 export function KeepAlive(user, onData) {
     return axios.put(prefix + `/api/keepalive`, user).then((response) => {
-        // console.log("PollUserActions succesful", response);
+        // console.log("KeepAlive succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
         console.log("couldn't keepalive user", user, error)
+    })
+}
+
+export function GetLoggedUsers(onData) {
+    return axios.get(prefix + `/api/getLoggedUsers`).then((response) => {
+        // console.log("GetLoggedUsers succesful", response);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("couldn't get logged users", error)
     })
 }
