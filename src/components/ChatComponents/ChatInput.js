@@ -33,6 +33,7 @@ class ChatInput extends React.Component {
                 onSubmit={(event) => {
                     event.preventDefault();
                     this.props.onPostMessage(this.state.text);
+                    this.setText("");
                 }}
             >
                 <input
