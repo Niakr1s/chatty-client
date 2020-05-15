@@ -11,7 +11,7 @@ class ChatHeaderAuth extends React.Component {
     render = () => {
         return <div className="chat-username blue">
             <div>
-                <div className="chat-username-text no-border lightblue">{this.props.user}
+                <div className="chat-username-text no-border lightblue">{this.props.user.name}
                 </div>
                 <button
                     className="no-border blue"

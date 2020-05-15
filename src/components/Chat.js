@@ -15,7 +15,10 @@ class Chat extends React.Component {
         super(props);
 
         this.state = {
-            user: this.props.user,
+            user: {
+                name: "",
+                hash: 0,
+            },
             messages: [],
             activeUsers: [],
         }
@@ -57,16 +60,32 @@ class Chat extends React.Component {
     }
 
     logout = () => {
-        console.log(`Logouting user: "${this.state.user}"`)
-        this.setState({
-            user: "",
+        console.log(`Logouting user:`, this.state.user)
+        this.setState((prevState) => {
+            return {
+                user: {
+                    name: "",
+                    hash: prevState.user.hash,
+                }
+            }
         })
     }
 
     login = (name) => {
-        console.log(`Logging user: ${name}`)
-        this.setState({
-            user: name,
+        console.log("hash:", this.state.user, this.state.user.hash)
+        let user = {
+            name,
+            hash: this.state.user.hash,
+        }
+        console.log(`Logging user:`, user)
+
+        ChatApi.UserLogin(user, (user) => {
+            console.log(`user logged`, user)
+            this.setState({
+                user,
+            })
+            console.log("state: ", this.state.user)
+            // TODO update cookies
         })
     }
 
@@ -75,8 +94,8 @@ class Chat extends React.Component {
 
         if (!message) { console.log("Can't post empty message!"); return; }
 
-        console.log(`Posting message: "${this.state.user}: ${message}"`);
-        ChatApi.PostMessage({ user: { name: this.state.user }, text: message }, (message) => {
+        console.log(`Posting message: "${message}" for user`, this.state.user);
+        ChatApi.PostMessage({ user: this.state.user, text: message }, (message) => {
             this.appendMessage(message)
         });
     }
@@ -91,7 +110,7 @@ class Chat extends React.Component {
                 activeUsers = activeUsers.filter((it) => it !== userAction.name)
             }
 
-            activeUsers = activeUsers.filter((name) => name !== prevState.user);
+            activeUsers = activeUsers.filter((name) => name !== prevState.user.name);
             activeUsers.sort();
 
             return { activeUsers };

@@ -58,3 +58,13 @@ export function PollUserActions(clientID, onData) {
         console.log("not an error, jsut users actions poll timeout")
     })
 }
+
+
+export function UserLogin(user, onData) {
+    return axios.post(prefix + `/api/login`, user).then((response) => {
+        // console.log("PollUserActions succesful", response);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("couldn't login user", user, error)
+    })
+}
