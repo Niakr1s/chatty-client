@@ -76,3 +76,12 @@ export function UserLogout(user, onData) {
         console.log("couldn't logout user", user, error)
     })
 }
+
+export function KeepAlive(user, onData) {
+    return axios.put(prefix + `/api/keepalive`, user).then((response) => {
+        // console.log("PollUserActions succesful", response);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("couldn't keepalive user", user, error)
+    })
+}

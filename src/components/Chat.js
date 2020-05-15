@@ -36,8 +36,22 @@ class Chat extends React.Component {
             console.log(`Got clientID: ${this.clientID}, starting long poll...`)
             this.startPollMessages();
             this.startPollUserActions();
+            this.startKeepAlive();
         })
 
+    }
+
+    startKeepAlive = () => {
+        if (this.state.user.name === "") {
+            setTimeout(() => {
+                this.startKeepAlive();
+            }, 10 * 1000)
+            return;
+        }
+
+        ChatApi.KeepAlive(this.state.user, () => {
+            console.log("Keep-alive package success", this.state.user)
+        })
     }
 
     startPollUserActions = () => {
