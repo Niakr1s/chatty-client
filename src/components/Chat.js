@@ -20,7 +20,7 @@ class Chat extends React.Component {
                 hash: 0,
             },
             messages: [],
-            activeUsers: [],
+            loggedUsers: [],
         }
     }
 
@@ -120,14 +120,14 @@ class Chat extends React.Component {
 
     appendUserAction = (userAction) => {
         this.setState((prevState, props) => {
-            let activeUsers = [...prevState.activeUsers];
+            let loggedUsers = [...prevState.loggedUsers];
 
             let user = { ...prevState.user }
 
             if (userAction.action === "login") {
-                activeUsers.push(userAction.name);
+                loggedUsers.push(userAction.name);
             } else if (userAction.action === "logout") {
-                activeUsers = activeUsers.filter((it) => it !== userAction.name)
+                loggedUsers = loggedUsers.filter((it) => it !== userAction.name)
 
                 // if it is our username = logout!
                 if (userAction.name === this.state.user.name) {
@@ -135,10 +135,10 @@ class Chat extends React.Component {
                 }
             }
 
-            activeUsers = activeUsers.filter((name) => name !== prevState.user.name);
-            activeUsers.sort();
+            loggedUsers = loggedUsers.filter((name) => name !== prevState.user.name);
+            loggedUsers.sort();
 
-            return { activeUsers, user };
+            return { loggedUsers, user };
         })
     }
 
@@ -168,7 +168,7 @@ class Chat extends React.Component {
                         onPostMessage={this.postMessage}
                     ></ChatInput>
                 </div >
-                <ChatUserList activeUsers={this.state.activeUsers}></ChatUserList>
+                <ChatUserList loggedUsers={this.state.loggedUsers}></ChatUserList>
             </div>
         )
     }

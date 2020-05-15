@@ -12,7 +12,7 @@ class ChatUserList extends React.Component {
                     <span className="userlist-header-text">User list</span>
                 </div>
                 <ul className="userlist overflow-y blue-gradient">
-                    {this.props.activeUsers.map((username, idx) => {
+                    {this.props.loggedUsers.map((username, idx) => {
                         return <li className="userlist-item lightblue" key={idx}>{username}</li>
                     })}
                 </ul>
