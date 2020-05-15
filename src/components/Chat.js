@@ -42,15 +42,20 @@ class Chat extends React.Component {
     }
 
     startKeepAlive = () => {
+        const timeout = 10 * 1000;
+
         if (this.state.user.name === "") {
             setTimeout(() => {
                 this.startKeepAlive();
-            }, 10 * 1000)
+            }, timeout)
             return;
         }
 
         ChatApi.KeepAlive(this.state.user, () => {
             console.log("Keep-alive package success", this.state.user)
+            setTimeout(() => {
+                this.startKeepAlive();
+            }, timeout)
         })
     }
 
