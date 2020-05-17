@@ -17,7 +17,7 @@ class Chat extends React.Component {
         this.state = {
             user: {
                 name: "",
-                hash: 0,
+                keepAliveToken: 0,
             },
             messages: [],
             loggedUsers: [],
@@ -103,7 +103,7 @@ class Chat extends React.Component {
     login = (name) => {
         let user = {
             name,
-            hash: this.state.user.hash,
+            keepAliveToken: this.state.user.keepAliveToken,
         }
         console.log(`Logging user:`, user)
 
