@@ -33,6 +33,14 @@ body {
     outline: none;
 }
 
+.no-margin {
+    margin: 0;
+}
+
+.no-padding {
+    padding: 0;
+}
+
 .h700px {
     height: 700px;
 }
@@ -44,6 +52,10 @@ body {
 .overflow-y {
     overflow-y: auto;
     height: calc(100% - 70px - 70px);
+}
+
+.float-right {
+    float: right;
 }
 
 
@@ -193,4 +205,58 @@ body {
     height: 40px;
     border-radius: 0px 20px 20px 0px;
     width: 40px;
+}
+
+
+/* MODAL */
+
+.modal {
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    position: relative;
+    background-color: #e1e5eed8;
+    margin: 15% auto;
+    padding: 15px 40px 15px 30px;
+    width: 310px;
+    border-radius: 5px;
+}
+
+.modal-form {
+    display: inline-block;
+}
+
+.modal-close {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin: 0;
+    padding: 0 10px 0 10px;
+    background-color: rgba(255, 0, 0, 0.788);
+    border-radius: 0 5px 0 0;
+}
+
+.modal-content-header {
+    text-align: center;
+    padding: 0 0 15px 0;
+}
+
+.modal-buttons {
+    padding: 10px 0 10px 0;
+}
+
+.modal-error {
+    color: red;
+    font-size: 10px;
+    font-weight: 300;
+    font-style: italic;
 }

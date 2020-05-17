@@ -8,6 +8,8 @@ import ChatHeader from "./ChatComponents/ChatHeader"
 
 import ChatUserList from "./ChatComponents/ChatUserList"
 
+import AuthModal from "./AuthComponents/AuthModal"
+
 import * as ChatApi from './api/ChatApi'
 
 class Chat extends React.Component {
@@ -21,6 +23,7 @@ class Chat extends React.Component {
             },
             messages: [],
             loggedUsers: [],
+            showAuthModal: true,
         }
     }
 
@@ -160,6 +163,7 @@ class Chat extends React.Component {
     }
 
     render() {
+        console.log(this.state)
         return (
             <div className="chat h700px">
                 <div className="chat-left h100">
@@ -177,6 +181,9 @@ class Chat extends React.Component {
                     ></ChatInput>
                 </div >
                 <ChatUserList loggedUsers={this.state.loggedUsers}></ChatUserList>
+                {this.state.showAuthModal ? <AuthModal
+                    close={() => this.setState({ showAuthModal: false })}
+                ></AuthModal> : null}
             </div>
         )
     }
