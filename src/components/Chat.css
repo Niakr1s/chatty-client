@@ -113,6 +113,10 @@ body {
     width: 100%;
 }
 
+.chat-header {
+    padding: 0 10px 0 20px;
+}
+
 
 /* right side */
 

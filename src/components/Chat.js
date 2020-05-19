@@ -175,7 +175,7 @@ class Chat extends React.Component {
         return (
             <div className="chat h700px">
                 <div className="chat-left h100">
-                    <div className="flex blue space-between">
+                    <div className="flex blue space-between chat-header">
                         <ChatHeader
                             user={this.state.user}
                             onLogout={this.logout}
