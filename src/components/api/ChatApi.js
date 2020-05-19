@@ -5,7 +5,7 @@ const prefix = "http://127.0.0.1:8080"
 
 // returns data
 export function PostMessage(message, onData, onErr) {
-    axios.post(prefix + "/api/postMessage", message).then((response) => {
+    return axios.post(prefix + "/api/postMessage", message).then((response) => {
         // console.log("PostMessage succesful", response)
         if (onData) onData(response.data)
     }).catch((error) => {
@@ -15,7 +15,7 @@ export function PostMessage(message, onData, onErr) {
 }
 
 export function GetMessage(id, onData, onErr) {
-    axios.get(prefix + `/api/getMessage/${id}`).then((response) => {
+    return axios.get(prefix + `/api/getMessage/${id}`).then((response) => {
         // console.log("GetMessage succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
@@ -26,7 +26,7 @@ export function GetMessage(id, onData, onErr) {
 
 
 export function GetClientID(onData, onErr) {
-    axios.get(prefix + `/api/getClientID`).then((response) => {
+    return axios.get(prefix + `/api/getClientID`).then((response) => {
         // console.log("GetClientID succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
@@ -46,7 +46,7 @@ export function GetLastNMessages(n, onData, onErr) {
 }
 
 export function PollMessages(clientID, onData) {
-    axios.get(prefix + `/api/pollMessage/${clientID}`, {}).then((response) => {
+    return axios.get(prefix + `/api/pollMessage/${clientID}`, {}).then((response) => {
         // console.log("PollMessage succesful", response);
         if (onData) onData(response.data)
     }).catch(() => {
@@ -55,7 +55,7 @@ export function PollMessages(clientID, onData) {
 }
 
 export function PollUserActions(clientID, onData) {
-    axios.get(prefix + `/api/pollUserActions/${clientID}`, {}).then((response) => {
+    return axios.get(prefix + `/api/pollUserActions/${clientID}`, {}).then((response) => {
         // console.log("PollUserActions succesful", response);
         if (onData) onData(response.data)
     }).catch(() => {
@@ -64,7 +64,7 @@ export function PollUserActions(clientID, onData) {
 }
 
 export function UserLogin(user, onData, onErr) {
-    axios.post(prefix + `/api/login`, user).then((response) => {
+    return axios.post(prefix + `/api/login`, user).then((response) => {
         // console.log("UserLogin succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
@@ -74,7 +74,7 @@ export function UserLogin(user, onData, onErr) {
 }
 
 export function UserLogout(user, onData, onErr) {
-    axios.post(prefix + `/api/logout`, user).then((response) => {
+    return axios.post(prefix + `/api/logout`, user).then((response) => {
         // console.log("UserLogout succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
@@ -84,7 +84,7 @@ export function UserLogout(user, onData, onErr) {
 }
 
 export function KeepAlive(user, onData, onErr) {
-    axios.put(prefix + `/api/keepalive`, user).then((response) => {
+    return axios.put(prefix + `/api/keepalive`, user).then((response) => {
         // console.log("KeepAlive succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
@@ -94,7 +94,7 @@ export function KeepAlive(user, onData, onErr) {
 }
 
 export function GetLoggedUsers(onData, onErr) {
-    axios.get(prefix + `/api/getLoggedUsers`).then((response) => {
+    return axios.get(prefix + `/api/getLoggedUsers`).then((response) => {
         // console.log("GetLoggedUsers succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
@@ -104,11 +104,21 @@ export function GetLoggedUsers(onData, onErr) {
 }
 
 export function UserRegister(user, onData, onErr) {
-    axios.post(prefix + `/api/register`, user).then((response) => {
+    return axios.post(prefix + `/api/register`, user).then((response) => {
         // console.log("UserRegister succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
         console.log("couldn't register user", user, error)
+        if (onErr) onErr(error)
+    })
+}
+
+export function GetAuthToken(user, onData, onErr) {
+    return axios.post(prefix + `/api/getAuthToken`, user).then((response) => {
+        // console.log("UserRegister succesful", response);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("couldn't get auth token", user, error)
         if (onErr) onErr(error)
     })
 }
