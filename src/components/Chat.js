@@ -19,7 +19,7 @@ class Chat extends React.Component {
         this.state = {
             user: {
                 name: "",
-                keepAliveToken: 0,
+                loginToken: 0,
             },
             messages: [],
             loggedUsers: [],
