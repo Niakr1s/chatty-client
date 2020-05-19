@@ -1,6 +1,6 @@
 import React from "react"
 
-class AuthPrompt extends React.Component {
+class AuthBtn extends React.Component {
     render = () => {
         return (
             <div className="chat-header-prompt">
@@ -13,4 +13,4 @@ class AuthPrompt extends React.Component {
     }
 }
 
-export default AuthPrompt
+export default AuthBtn

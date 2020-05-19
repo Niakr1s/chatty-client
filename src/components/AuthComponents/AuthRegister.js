@@ -76,22 +76,25 @@ class AuthRegister extends React.Component {
                             </tr>
                         </tbody>
                     </table>
+                    <div className="modal-buttons">
+                        <button
+                            type="button"
+                            className="btn"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                this.props.change();
+                            }}
+                        >login?</button>
+                        <button
+                            type="submit"
+                            className="float-right btn"
+                            onClick={(event) => {
+                                event.preventDefault();
+                                this.register();
+                            }}
+                        >register</button>
+                    </div>
                 </form>
-                <div className="modal-buttons">
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            this.props.change();
-                        }}
-                    >login</button>
-                    <button
-                        className="float-right"
-                        onClick={(event) => {
-                            event.preventDefault();
-                            this.register();
-                        }}
-                    >register</button>
-                </div>
                 <div className="modal-error">
                     {this.state.error}
                 </div>

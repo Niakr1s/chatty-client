@@ -60,13 +60,16 @@ class AuthLogin extends React.Component {
                     </table>
                     <div className="modal-buttons">
                         <button
+                            type="button"
+                            className="btn"
                             onClick={(event) => {
                                 event.preventDefault();
                                 this.props.change();
                             }}
-                        >register</button>
+                        >register?</button>
                         <button
-                            className="float-right"
+                            type="submit"
+                            className="float-right btn"
                             onClick={(e) => {
                                 e.preventDefault();
                                 this.getAuthToken();

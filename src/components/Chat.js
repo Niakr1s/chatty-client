@@ -12,7 +12,7 @@ import AuthModal from "./AuthComponents/AuthModal"
 
 import * as ChatApi from './api/ChatApi'
 
-import AuthPrompt from "./ChatComponents/AuthPrompt"
+import AuthBtn from "./ChatComponents/AuthBtn"
 
 class Chat extends React.Component {
     constructor(props) {
@@ -182,7 +182,7 @@ class Chat extends React.Component {
                                 this.login(user)
                             }}
                         ></ChatHeader>
-                        <AuthPrompt onAuthClick={() => { this.setState({ showAuthModal: true }) }} />
+                        <AuthBtn onAuthClick={() => { this.setState({ showAuthModal: true }) }} />
                     </div>
                     <ChatBox
                         messages={this.state.messages}
