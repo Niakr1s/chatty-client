@@ -25,6 +25,13 @@ body {
     background: linear-gradient(0deg, rgba(15, 28, 73, 1) 0%, rgba(107, 125, 212, 1) 50%);
 }
 
+.btn {
+    background-color: rgb(196, 196, 216);
+    margin: 0 2px 0 2px;
+    border-radius: 5px;
+    outline: none;
+}
+
 
 /* dimensions */
 
@@ -56,6 +63,14 @@ body {
 
 .float-right {
     float: right;
+}
+
+.flex {
+    display: flex;
+}
+
+.space-between {
+    justify-content: space-between;
 }
 
 
@@ -142,6 +157,11 @@ body {
     vertical-align: middle;
     line-height: 40px;
     display: inline-block;
+}
+
+.chat-header-prompt {
+    margin: 20px 0 0 0;
+    float: right;
 }
 
 

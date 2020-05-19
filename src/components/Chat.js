@@ -12,6 +12,8 @@ import AuthModal from "./AuthComponents/AuthModal"
 
 import * as ChatApi from './api/ChatApi'
 
+import AuthPrompt from "./ChatComponents/AuthPrompt"
+
 class Chat extends React.Component {
     constructor(props) {
         super(props);
@@ -23,7 +25,7 @@ class Chat extends React.Component {
             },
             messages: [],
             loggedUsers: [],
-            showAuthModal: true,
+            showAuthModal: false,
         }
     }
 
@@ -172,13 +174,16 @@ class Chat extends React.Component {
         return (
             <div className="chat h700px">
                 <div className="chat-left h100">
-                    <ChatHeader
-                        user={this.state.user}
-                        onLogout={this.logout}
-                        onLogin={(user) => {
-                            this.login(user)
-                        }}
-                    ></ChatHeader>
+                    <div className="flex space-between blue">
+                        <ChatHeader
+                            user={this.state.user}
+                            onLogout={this.logout}
+                            onLogin={(user) => {
+                                this.login(user)
+                            }}
+                        ></ChatHeader>
+                        <AuthPrompt onAuthClick={() => { this.setState({ showAuthModal: true }) }} />
+                    </div>
                     <ChatBox
                         messages={this.state.messages}
                     ></ChatBox>

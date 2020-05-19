@@ -36,7 +36,7 @@ class ChatHeaderNonAuth extends React.Component {
             <div>
                 <input
                     className="chat-username-text no-border lightblue"
-                    placeholder="Please login"
+                    placeholder="Login without password"
                     onChange={(event) => this.updateName(event.target.value)}
                 ></input>
                 <button

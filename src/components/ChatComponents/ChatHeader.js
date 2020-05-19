@@ -4,7 +4,7 @@ import ChatHeaderAuth from './ChatHeader/ChatHeaderAuth'
 import ChatHeaderNonAuth from './ChatHeader/ChatHeaderNonAuth'
 
 class ChatHeader extends React.Component {
-    render = () => {
+    getInnerComponent = () => {
         return this.props.user.name !== ""
             ? <ChatHeaderAuth
                 user={this.props.user}
@@ -13,6 +13,11 @@ class ChatHeader extends React.Component {
             : <ChatHeaderNonAuth
                 onLogin={this.props.onLogin}
             />
+    }
+
+
+    render = () => {
+        return this.getInnerComponent()
     }
 }
 
