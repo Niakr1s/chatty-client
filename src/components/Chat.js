@@ -103,11 +103,7 @@ class Chat extends React.Component {
         })
     }
 
-    login = (name) => {
-        let user = {
-            name,
-            keepAliveToken: this.state.user.keepAliveToken,
-        }
+    login = (user) => {
         console.log(`Logging user:`, user)
 
         ChatApi.UserLogin(user, (user) => {
@@ -170,7 +166,9 @@ class Chat extends React.Component {
                     <ChatHeader
                         user={this.state.user}
                         onLogout={this.logout}
-                        onUsernameSubmit={this.login}
+                        onLogin={(user) => {
+                            this.login(user)
+                        }}
                     ></ChatHeader>
                     <ChatBox
                         messages={this.state.messages}
@@ -183,7 +181,9 @@ class Chat extends React.Component {
                 <ChatUserList loggedUsers={this.state.loggedUsers}></ChatUserList>
                 {this.state.showAuthModal ? <AuthModal
                     close={() => this.setState({ showAuthModal: false })}
-                ></AuthModal> : null}
+                    login={(name) => this.login(name)}
+                ></AuthModal> : null
+                }
             </div>
         )
     }

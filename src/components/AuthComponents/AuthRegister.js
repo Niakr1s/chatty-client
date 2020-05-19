@@ -2,17 +2,32 @@ import React from "react"
 
 import ModalCloseButton from "./ModalCloseButton"
 
+import { UserRegister } from "../api/ChatApi"
+
 class AuthRegister extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            user: "",
+            name: "",
             email: "",
             password: "",
 
             error: ""
         }
+    }
+
+    register = () => {
+        UserRegister({
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password
+        }, (data) => {
+            alert(`registration succesful, activation link sent to ${data.email}`)
+            this.props.close();
+        }, (error) => {
+            this.setState({ error: error.response.data })
+        })
     }
 
     render = () => {
@@ -29,8 +44,8 @@ class AuthRegister extends React.Component {
                                 <td>
                                     <input
                                         className="no-border"
-                                        value={this.state.user}
-                                        onChange={(event) => this.setState({ user: event.target.value })}
+                                        value={this.state.name}
+                                        onChange={(event) => this.setState({ name: event.target.value })}
                                     ></input>
                                 </td>
                             </tr>
@@ -73,6 +88,7 @@ class AuthRegister extends React.Component {
                         className="float-right"
                         onClick={(event) => {
                             event.preventDefault();
+                            this.register();
                         }}
                     >register</button>
                 </div>

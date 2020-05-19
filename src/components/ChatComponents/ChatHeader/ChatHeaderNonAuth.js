@@ -16,7 +16,7 @@ class ChatHeaderNonAuth extends React.Component {
 
         if (!this.isUsernameValid(this.state.name)) return;
 
-        if (this.props.onUsernameSubmit) this.props.onUsernameSubmit(this.state.name);
+        if (this.props.onLogin) this.props.onLogin({ name: this.state.name });
     }
 
     isUsernameValid = (name) => {

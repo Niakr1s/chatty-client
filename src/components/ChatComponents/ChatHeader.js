@@ -11,7 +11,7 @@ class ChatHeader extends React.Component {
                 onLogout={this.props.onLogout}
             />
             : <ChatHeaderNonAuth
-                onUsernameSubmit={this.props.onUsernameSubmit}
+                onLogin={this.props.onLogin}
             />
     }
 }

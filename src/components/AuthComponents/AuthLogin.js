@@ -1,18 +1,27 @@
 import React from "react"
 
 import ModalCloseButton from "./ModalCloseButton"
-import { Modal } from "semantic-ui-react";
+import { GetAuthToken } from "../api/ChatApi"
 
 class AuthLogin extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            user: "",
+            name: "",
             password: "",
 
             error: "",
         }
+    }
+
+    getAuthToken = () => {
+        GetAuthToken({ name: this.state.name, password: this.state.password }, (user) => {
+            this.props.close();
+            this.props.login(user);
+        }, (error) => {
+            this.setState({ error: error.response.data })
+        })
     }
 
     render = () => {
@@ -29,8 +38,8 @@ class AuthLogin extends React.Component {
                                 <td>
                                     <input
                                         className="no-border"
-                                        value={this.state.user}
-                                        onChange={(event) => this.setState({ user: event.target.value })}
+                                        value={this.state.name}
+                                        onChange={(event) => this.setState({ name: event.target.value })}
                                     ></input>
                                 </td>
                             </tr>
@@ -58,7 +67,10 @@ class AuthLogin extends React.Component {
                         >register</button>
                         <button
                             className="float-right"
-                            onClick={(e) => e.preventDefault()}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                this.getAuthToken();
+                            }}
                         >login</button>
                     </div>
                     <div className="modal-error">
