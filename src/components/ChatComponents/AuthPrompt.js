@@ -5,7 +5,7 @@ class AuthPrompt extends React.Component {
         return (
             <div className="chat-header-prompt">
                 <button
-                    className="btn"
+                    className="btn lightblue"
                     onClick={() => this.props.onAuthClick()}
                 >auth</button>
             </div>

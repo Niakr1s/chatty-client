@@ -25,11 +25,15 @@ body {
     background: linear-gradient(0deg, rgba(15, 28, 73, 1) 0%, rgba(107, 125, 212, 1) 50%);
 }
 
+.border {
+    border: 2px solid #496570;
+}
+
 .btn {
-    background-color: rgb(196, 196, 216);
     margin: 0 2px 0 2px;
     border-radius: 5px;
     outline: none;
+    border: 2px solid #496570;
 }
 
 
