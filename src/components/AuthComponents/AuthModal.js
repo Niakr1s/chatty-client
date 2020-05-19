@@ -39,10 +39,10 @@ class AuthModal extends React.Component {
             <div
                 id="modal"
                 className="modal"
-            // onClick={(event) => {
-            //     if (event.target.id === "modal")
-            //         this.props.close();
-            // }}
+                onClick={(event) => {
+                    if (event.target.id === "modal")
+                        this.props.close();
+                }}
             >
                 {this.innerComponent()}
             </div>
