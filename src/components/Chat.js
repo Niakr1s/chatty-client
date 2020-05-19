@@ -126,6 +126,15 @@ class Chat extends React.Component {
     }
 
     appendUserAction = (userAction) => {
+        // if it's us, check if it pseudo logout, happening after login with password
+        if (userAction.action === "logout" && userAction.name === this.state.user.name) {
+            // to ensure, we are sending KeepAlivePackage
+            // and on error - clearing user.name
+            ChatApi.KeepAlive(this.state.user, () => { }, (error) => {
+                this.setState({ user: { ...this.state.user, name: "" } })
+            })
+        }
+
         this.setState((prevState, props) => {
             let loggedUsers = [...prevState.loggedUsers];
 
