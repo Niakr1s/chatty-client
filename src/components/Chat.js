@@ -138,7 +138,7 @@ class Chat extends React.Component {
 
                 // if it is our username = logout!
                 if (userAction.name === this.state.user.name) {
-                    user.name = ""
+                    ChatApi.KeepAlive(this.state.user, () => { }, (error) => { user.name = "" })
                 }
             }
 
