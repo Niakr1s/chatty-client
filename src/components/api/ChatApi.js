@@ -94,3 +94,12 @@ export function GetLoggedUsers(onData) {
         console.log("couldn't get logged users", error)
     })
 }
+
+export function UserRegister(user, onData) {
+    return axios.post(prefix + `/api/register`, user).then((response) => {
+        // console.log("UserRegister succesful", response);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("couldn't register user", user, error)
+    })
+}
