@@ -26,6 +26,7 @@ class Chat extends React.Component {
             messages: [],
             loggedUsers: [],
             showAuthModal: false,
+            showUserList: false,
         }
     }
 
@@ -182,7 +183,10 @@ class Chat extends React.Component {
                                 this.login(user)
                             }}
                         ></ChatHeader>
-                        <HeaderButtons onAuthClick={() => { this.setState({ showAuthModal: true }) }} />
+                        <HeaderButtons
+                            onAuthClick={() => { this.setState({ showAuthModal: true }) }}
+                            onUsersClick={() => { this.setState((prevState) => { return { showUserList: !prevState.showUserList } }) }}
+                        />
                     </div>
                     <ChatBox
                         messages={this.state.messages}
@@ -192,7 +196,11 @@ class Chat extends React.Component {
                         onPostMessage={this.postMessage}
                     ></ChatInput>
                 </div >
-                <ChatUserList loggedUsers={this.state.loggedUsers}></ChatUserList>
+                {this.state.showUserList && <ChatUserList
+                    close={() => this.setState({ showUserList: false })}
+                    loggedUsers={this.state.loggedUsers}
+                ></ChatUserList>
+                }
                 {this.state.showAuthModal ? <AuthModal
                     close={() => this.setState({ showAuthModal: false })}
                     login={(name) => this.login(name)}

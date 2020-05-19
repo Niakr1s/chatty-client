@@ -15,7 +15,7 @@ class HeaderButtons extends React.Component {
                     </tr>
                     <tr>
                         <UsersBtn
-                            onClick={() => { }}
+                            onClick={() => { this.props.onUsersClick() }}
                         >users</UsersBtn>
                     </tr>
                 </table>
