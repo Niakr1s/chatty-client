@@ -95,13 +95,9 @@ class Chat extends React.Component {
     logout = () => {
         console.log(`Logouting user:`, this.state.user)
 
-        ChatApi.UserLogout(this.state.user, () => {
+        ChatApi.UserLogout(this.state.user).then(() => {
             this.setState((prevState) => {
-                return {
-                    user: Object.assign({}, prevState.user, {
-                        name: "",
-                    })
-                }
+                return { user: { ...prevState.user, name: "" } }
             })
         })
     }
@@ -109,11 +105,18 @@ class Chat extends React.Component {
     login = (user) => {
         console.log(`Logging user:`, user)
 
-        ChatApi.UserLogin(user, (user) => {
-            this.setState((prevState) => {
-                return { user: Object.assign({}, { ...prevState.user }, user) }
+        ChatApi.UserLogin(user, (data) => this.userLogged(data), (error) => {
+            ChatApi.UserLoginLogged(user, (data) => this.userLogged(data), (error) => {
+                console.log(`Couldn't login user:`, error)
             })
-            // TODO update cookies
+        })
+    }
+
+
+    userLogged = (user) => {
+        console.log(`logged user`, user)
+        this.setState((prevState) => {
+            return { user: { ...prevState.user, ...user } }
         })
     }
 

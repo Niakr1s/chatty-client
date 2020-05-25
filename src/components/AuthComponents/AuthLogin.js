@@ -1,7 +1,7 @@
 import React from "react"
 
 import ModalCloseButton from "./ModalCloseButton"
-import { GetAuthToken } from "../api/ChatApi"
+import { Authorize } from "../api/ChatApi"
 
 class AuthLogin extends React.Component {
     constructor(props) {
@@ -16,11 +16,11 @@ class AuthLogin extends React.Component {
     }
 
     getAuthToken = () => {
-        GetAuthToken({ name: this.state.name, password: this.state.password }, (user) => {
+        Authorize({ name: this.state.name, password: this.state.password }, (data) => {
+            this.props.login(data.user);
             this.props.close();
-            this.props.login(user);
         }, (error) => {
-            this.setState({ error: error.response.data })
+            this.setState({ error: error.response.data.error })
         })
     }
 
