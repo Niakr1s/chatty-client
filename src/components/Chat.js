@@ -46,15 +46,7 @@ class Chat extends React.Component {
         })
 
         this.startKeepAlive();
-
-        ChatApi.GetClientID((data) => {
-            this.clientID = data.clientID
-            console.log(`Got clientID: ${this.clientID}, starting long poll...`)
-            this.startPollMessages();
-            this.startPollUserActions();
-            this.startKeepAlive();
-        })
-
+        this.startPoll();
     }
 
     startKeepAlive = () => {
@@ -72,25 +64,34 @@ class Chat extends React.Component {
             setTimeout(() => {
                 this.startKeepAlive();
             }, timeout)
+        }, () => {
+            console.log("Keep-alive package failue")
+            setTimeout(() => {
+                this.startKeepAlive();
+            }, timeout)
         })
     }
 
-    startPollUserActions = () => {
-        ChatApi.PollUserActions(this.clientID, (userAction) => {
-            console.log(`Got new user action`, userAction)
-            this.appendUserAction(userAction)
-        }).then(() => {
-            this.startPollUserActions();
-        })
-    }
+    startPoll = () => {
+        const timeout = 10 * 1000;
 
+        if (this.state.user.name === "") {
+            setTimeout(() => {
+                this.startPoll();
+            }, timeout)
+            return;
+        }
 
-    startPollMessages = () => {
-        ChatApi.PollMessages(this.clientID, (message) => {
-            console.log(`Got new message`, message)
-            this.appendMessage(message)
-        }).then(() => {
-            this.startPollMessages(this.clientID)
+        ChatApi.Poll(() => {
+            console.log("Poll events success")
+            setTimeout(() => {
+                this.startPoll();
+            }, timeout)
+        }, () => {
+            console.log("Poll events failue")
+            setTimeout(() => {
+                this.startPoll();
+            }, timeout)
         })
     }
 
@@ -120,7 +121,6 @@ class Chat extends React.Component {
         this.setState((prevState) => {
             return { user: { ...prevState.user, ...user } }
         })
-        this.startKeepAlive()
     }
 
     postMessage = (message) => {
