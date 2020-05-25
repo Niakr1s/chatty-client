@@ -45,52 +45,27 @@ class Chat extends React.Component {
             })
         })
 
-        this.startKeepAlive();
-        this.startPoll();
+        this.startRequestOnTimeout("keepalive", 10 * 1000, ChatApi.KeepAlive)
+        this.startRequestOnTimeout("poll", 10 * 1000, ChatApi.Poll)
     }
 
-    startKeepAlive = () => {
-        const timeout = 10 * 1000;
-
+    startRequestOnTimeout = (name, timeout, apiFn) => {
         if (this.state.user.name === "") {
             setTimeout(() => {
-                this.startKeepAlive();
+                this.startRequestOnTimeout(name, timeout, apiFn);
             }, timeout)
             return;
         }
 
-        ChatApi.KeepAlive(() => {
-            console.log("Keep-alive package success")
+        apiFn(() => {
+            console.log(name, " success")
             setTimeout(() => {
-                this.startKeepAlive();
+                this.startRequestOnTimeout(name, timeout, apiFn);
             }, timeout)
         }, () => {
-            console.log("Keep-alive package failue")
+            console.log(name, " failue")
             setTimeout(() => {
-                this.startKeepAlive();
-            }, timeout)
-        })
-    }
-
-    startPoll = () => {
-        const timeout = 10 * 1000;
-
-        if (this.state.user.name === "") {
-            setTimeout(() => {
-                this.startPoll();
-            }, timeout)
-            return;
-        }
-
-        ChatApi.Poll(() => {
-            console.log("Poll events success")
-            setTimeout(() => {
-                this.startPoll();
-            }, timeout)
-        }, () => {
-            console.log("Poll events failue")
-            setTimeout(() => {
-                this.startPoll();
+                this.startRequestOnTimeout(name, timeout, apiFn);
             }, timeout)
         })
     }
