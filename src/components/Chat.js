@@ -44,29 +44,25 @@ class Chat extends React.Component {
                 }
             })
         })
-
-        this.startRequestOnTimeout("keepalive", 10 * 1000, ChatApi.KeepAlive)
-        this.startRequestOnTimeout("poll", 10 * 1000, ChatApi.Poll)
     }
 
-    startRequestOnTimeout = (name, timeout, apiFn) => {
+    startRequestOnTimeout = (successTimeout, failureTimeout, apiFn, onFailure) => {
         if (this.state.user.name === "") {
-            setTimeout(() => {
-                this.startRequestOnTimeout(name, timeout, apiFn);
-            }, timeout)
             return;
         }
 
         apiFn(() => {
-            console.log(name, " success")
             setTimeout(() => {
-                this.startRequestOnTimeout(name, timeout, apiFn);
-            }, timeout)
+                this.startRequestOnTimeout(successTimeout, failureTimeout, apiFn, onFailure);
+            }, successTimeout)
         }, () => {
-            console.log(name, " failue")
+            if (onFailure) {
+                onFailure();
+                return;
+            }
             setTimeout(() => {
-                this.startRequestOnTimeout(name, timeout, apiFn);
-            }, timeout)
+                this.startRequestOnTimeout(successTimeout, failureTimeout, apiFn, onFailure);
+            }, failureTimeout)
         })
     }
 
@@ -96,6 +92,8 @@ class Chat extends React.Component {
         this.setState((prevState) => {
             return { user: { ...prevState.user, ...user } }
         })
+        this.startRequestOnTimeout(10 * 1000, 10 * 1000, ChatApi.KeepAlive, () => this.logout())
+        this.startRequestOnTimeout(10 * 1000, 1000, ChatApi.Poll)
     }
 
     postMessage = (message) => {

@@ -48,9 +48,10 @@ export function GetLastNMessages(n, onData, onErr) {
 
 export function Poll(onData, onErr) {
     return axios.get(prefix + `/api/loggedonly/poll`, { withCredentials: true }).then((response) => {
-        // console.log("PollMessage succesful", response);
+        console.log("Poll succes", response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
+        console.log("Poll failure", error);
         if (onErr) onErr(error)
     })
 }
@@ -86,10 +87,10 @@ export function UserLogout(user, onData, onErr) {
 
 export function KeepAlive(onData, onErr) {
     return axios.put(prefix + `/api/loggedonly/keepalive`, {}, { withCredentials: true }).then((response) => {
-        // console.log("KeepAlive succesful", response);
+        console.log("KeepAlive succes", response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("Keep-alive package error", error)
+        console.log("KeepAlive failure", error)
         if (onErr) onErr(error)
     })
 }
