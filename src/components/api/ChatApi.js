@@ -92,12 +92,12 @@ export function UserLogout(user, onData, onErr) {
     })
 }
 
-export function KeepAlive(user, onData, onErr) {
-    return axios.put(prefix + `/api/keepalive`, user, { withCredentials: true }).then((response) => {
+export function KeepAlive(onData, onErr) {
+    return axios.put(prefix + `/api/loggedonly/keepalive`, {}, { withCredentials: true }).then((response) => {
         // console.log("KeepAlive succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("couldn't keepalive user", user, error)
+        console.log("Keep-alive package error", error)
         if (onErr) onErr(error)
     })
 }

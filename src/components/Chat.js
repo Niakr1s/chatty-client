@@ -45,6 +45,8 @@ class Chat extends React.Component {
             })
         })
 
+        this.startKeepAlive();
+
         ChatApi.GetClientID((data) => {
             this.clientID = data.clientID
             console.log(`Got clientID: ${this.clientID}, starting long poll...`)
@@ -65,8 +67,8 @@ class Chat extends React.Component {
             return;
         }
 
-        ChatApi.KeepAlive(this.state.user, () => {
-            console.log("Keep-alive package success", this.state.user)
+        ChatApi.KeepAlive(() => {
+            console.log("Keep-alive package success")
             setTimeout(() => {
                 this.startKeepAlive();
             }, timeout)
@@ -118,6 +120,7 @@ class Chat extends React.Component {
         this.setState((prevState) => {
             return { user: { ...prevState.user, ...user } }
         })
+        this.startKeepAlive()
     }
 
     postMessage = (message) => {
