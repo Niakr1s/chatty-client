@@ -97,7 +97,7 @@ class Chat extends React.Component {
             return { user: { ...prevState.user, ...user } }
         })
         this.startRequestOnTimeout(10 * 1000, 10 * 1000, ChatApi.KeepAlive, () => this.logout())
-        this.startRequestOnTimeout(10 * 1000, 1000, ChatApi.Poll)
+        this.startRequestOnTimeout(10 * 1000, 0, ChatApi.Poll, () => this.logout())
         ChatApi.GetChats((chats) => {
             this.setState({
                 chats,
