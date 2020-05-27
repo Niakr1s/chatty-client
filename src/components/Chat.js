@@ -35,6 +35,8 @@ class Chat extends React.Component {
     }
 
     componentDidMount = () => {
+        this.login()
+
         ChatApi.GetLastNMessages(100, (messages) => {
             this.setState({
                 messages: messages,
