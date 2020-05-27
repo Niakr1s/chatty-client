@@ -2,6 +2,7 @@ import React from "react"
 
 import AuthBtn from "./HeaderButtons/AuthBtn"
 import UsersBtn from "./HeaderButtons/UsersBtn"
+import ChatsBtn from "./HeaderButtons/ChatsBtn"
 
 class HeaderButtons extends React.Component {
     render = () => {
@@ -9,14 +10,23 @@ class HeaderButtons extends React.Component {
             <div className="chat-header-prompt">
                 <table>
                     <tr>
-                        <AuthBtn
-                            onClick={() => this.props.onAuthClick()}
-                        >auth</AuthBtn>
+                        <td colSpan="100%">
+                            <AuthBtn
+                                onClick={() => this.props.onAuthClick()}
+                            >auth</AuthBtn>
+                        </td>
                     </tr>
                     <tr>
-                        <UsersBtn
-                            onClick={() => { this.props.onUsersClick() }}
-                        >users</UsersBtn>
+                        <td>
+                            <ChatsBtn
+                                onClick={() => { this.props.onChatsClick() }}
+                            >users</ChatsBtn>
+                        </td>
+                        <td>
+                            <UsersBtn
+                                onClick={() => { this.props.onUsersClick() }}
+                            >users</UsersBtn>
+                        </td>
                     </tr>
                 </table>
             </div>

@@ -61,6 +61,7 @@ export function UserLogin(user, onData, onErr) {
         // console.log("UserLogin succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
+        console.log("UserLogin failure", error.data);
         if (onErr) onErr(error)
     })
 }
@@ -124,3 +125,14 @@ export function Authorize(user, onData, onErr) {
         if (onErr) onErr(error)
     })
 }
+
+export function GetChats(onData, onErr) {
+    return axios.get(prefix + `/api/loggedonly/getChats`, { withCredentials: true }).then((response) => {
+        console.log("GetChats succesful", response);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("couldn't get chats", error)
+        if (onErr) onErr(error)
+    })
+}
+
