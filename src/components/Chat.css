@@ -168,6 +168,15 @@ body {
 
 /* left side */
 
+.joined {
+    float: right;
+    font-size: 8px;
+    border-radius: 50%;
+    padding: 0 5px;
+    background-color: rgba(125, 211, 140, 0.671);
+    cursor: default;
+}
+
 
 /* left side header */
 

@@ -128,11 +128,30 @@ export function Authorize(user, onData, onErr) {
 
 export function GetChats(onData, onErr) {
     return axios.get(prefix + `/api/loggedonly/getChats`, { withCredentials: true }).then((response) => {
-        console.log("GetChats succesful", response);
+        // console.log("GetChats succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("couldn't get chats", error)
+        // console.log("GetChats failure", error)
         if (onErr) onErr(error)
     })
 }
 
+export function JoinChat(chatname, onData, onErr) {
+    return axios.post(prefix + `/api/loggedonly/joinChat`, { chatname }, { withCredentials: true }).then((response) => {
+        // console.log("JoinChat succesful", response);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        // console.log("JoinChat failure", error)
+        if (onErr) onErr(error)
+    })
+}
+
+export function LeaveChat(chatname, onData, onErr) {
+    return axios.post(prefix + `/api/loggedonly/leaveChat`, { chatname }, { withCredentials: true }).then((response) => {
+        // console.log("LeaveChat succesful", response);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        // console.log("LeaveChat failure", error)
+        if (onErr) onErr(error)
+    })
+}

@@ -20,7 +20,18 @@ class ChatChatList extends React.Component {
                     </div>
                     <ul className="userlist overflow-y blue-gradient">
                         {this.props.chats.map((chat) => {
-                            return <li className="userlist-item lightblue" key={chat}>{chat}</li>
+                            return <li
+                                className="userlist-item lightblue"
+                                key={chat.name}
+                                onClick={() => {
+                                    if (chat.joined) { this.props.leaveChat(chat.name) }
+                                    else { this.props.joinChat(chat.name) }
+                                }}
+                            >{chat.name}{chat.joined &&
+                                <span
+                                    className="float-right joined"
+                                    title="unread counter"
+                                >0</span>}</li>
                         })}
                     </ul>
                     <div className="userlist-footer darkblue"></div>

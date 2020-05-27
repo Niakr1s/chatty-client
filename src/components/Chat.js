@@ -99,8 +99,30 @@ class Chat extends React.Component {
         this.startRequestOnTimeout(10 * 1000, 10 * 1000, ChatApi.KeepAlive, () => this.logout())
         this.startRequestOnTimeout(10 * 1000, 1000, ChatApi.Poll)
         ChatApi.GetChats((chats) => {
-            console.log("got chats", chats)
-            this.setState({ chats })
+            this.setState({
+                chats,
+            })
+        })
+    }
+
+    joinChat = (chatname) => {
+        ChatApi.JoinChat(chatname, () => {
+            this.setState((prevState) => {
+                let chat = prevState.chats.find((it) => it.name === chatname)
+                if (chat !== undefined) chat.joined = true  // TODO change on events instead
+                return prevState
+            })
+        })
+    }
+
+
+    leaveChat = (chatname) => {
+        ChatApi.LeaveChat(chatname, () => {
+            this.setState((prevState) => {
+                let chat = prevState.chats.find((it) => it.name === chatname)
+                if (chat !== undefined) chat.joined = false  // TODO change on events instead
+                return prevState
+            })
         })
     }
 
@@ -186,16 +208,23 @@ class Chat extends React.Component {
                 {this.state.showUserList && <ChatUserList
                     close={() => this.setState({ showUserList: false })}
                     loggedUsers={this.state.loggedUsers}
-                ></ChatUserList>}
-                {this.state.showChatsList && <ChatChatList
-                    close={() => this.setState({ showChatsList: false })}
-                    chats={this.state.chats}
-                ></ChatChatList>}
-                {this.state.showAuthModal ? <AuthModal
-                    close={() => this.setState({ showAuthModal: false })}
-                    login={(name) => this.login(name)}
-                ></AuthModal> : null}
-            </div>
+                ></ChatUserList>
+                }
+                {
+                    this.state.showChatsList && <ChatChatList
+                        close={() => this.setState({ showChatsList: false })}
+                        chats={this.state.chats}
+                        joinChat={this.joinChat}
+                        leaveChat={this.leaveChat}
+                    ></ChatChatList>
+                }
+                {
+                    this.state.showAuthModal ? <AuthModal
+                        close={() => this.setState({ showAuthModal: false })}
+                        login={(name) => this.login(name)}
+                    ></AuthModal> : null
+                }
+            </div >
         )
     }
 }
