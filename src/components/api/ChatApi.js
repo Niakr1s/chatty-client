@@ -5,7 +5,7 @@ const prefix = "http://127.0.0.1:8080"
 
 // returns data
 export function PostMessage(message, onData, onErr) {
-    return axios.post(prefix + "/api/postMessage", message, { withCredentials: true }).then((response) => {
+    return axios.post(prefix + "/api/loggedonly/postMessage", message, { withCredentials: true }).then((response) => {
         // console.log("PostMessage succesful", response)
         if (onData) onData(response.data)
     }).catch((error) => {

@@ -5,7 +5,7 @@ class ChatLine extends React.Component {
         return (
             <div className="chatline lightblue">
                 <div className="chatline-header">
-                    <div className="chatline-user">{this.props.message.user.name}</div>
+                    <div className="chatline-user">{this.props.message.username}</div>
                     <div className="chatline-time">{timeStr(this.props.message.time)}</div>
                 </div>
                 <div className="chatline-message">{this.props.message.text}</div>

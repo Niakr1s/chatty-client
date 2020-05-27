@@ -129,14 +129,14 @@ class Chat extends React.Component {
         })
     }
 
-    postMessage = (message) => {
+    postMessage = (messageText) => {
         if (!this.state.user) { console.log("Can't post message, no logged user!"); return; }
 
-        if (!message) { console.log("Can't post empty message!"); return; }
+        if (!messageText) { console.log("Can't post empty message!"); return; }
 
-        console.log(`Posting message: "${message}" for user`, this.state.user);
-        ChatApi.PostMessage({ user: this.state.user, text: message }, (message) => {
-            this.appendMessage(message)
+        console.log(`Posting message: "${messageText}" for user`, this.state.user);
+        ChatApi.PostMessage({ text: messageText, chat: this.state.activeChat }, (message) => {
+            this.appendMessage(message) // TODO remove after impl events
         });
     }
 
@@ -174,12 +174,28 @@ class Chat extends React.Component {
     }
 
     appendMessage = (message) => {
-        this.setState((prevState, props) => {
-            let messages = this.state.messages.filter((it) => it.id !== message.id)
+        this.setState((prevState) => {
+            let chats = prevState.chats
+            let index = chats.findIndex((chat) => chat.name === message.chat)
+            let chat = index === -1 ? this.newChat(message.chat, true) : chats[index]
+            console.log("appendMessage:", message, chats, chat)
+
+            chats = chats.filter((chat) => chat.name !== message.chat)
+
+            let messages = chat.messages.filter((it) => it.id !== message.id)
             messages.push(message)
             messages.sort(sortById)
-            return { messages }
+
+            chat.messages = messages
+            chats.push(chat)
+            chats.sort(sortByName)
+
+            return { chats }
         })
+    }
+
+    newChat = (chatname, joined) => {
+        return { chatname, messages: [], joined }
     }
 
     setActiveChat = (chatname) => {
@@ -198,6 +214,8 @@ class Chat extends React.Component {
                                 this.login(user)
                             }}
                         ></ChatHeader>
+                        {/* TODO add class ChatInfo or something */}
+                        <span className="float-right">{this.state.activeChat && "Chat: " + this.state.activeChat}</span>
                         <HeaderButtons
                             onAuthClick={() => { this.setState({ showAuthModal: true }) }}
                             onUsersClick={() => { this.setState((prevState) => { return { showUserList: !prevState.showUserList } }) }}
@@ -205,10 +223,10 @@ class Chat extends React.Component {
                         />
                     </div>
                     <ChatBox
-                        messages={this.state.messages}
+                        chats={this.state.chats}
+                        activeChat={this.state.activeChat}
                     ></ChatBox>
                     <ChatInput
-                        user={this.state.user}
                         onPostMessage={this.postMessage}
                     ></ChatInput>
                 </div >
@@ -239,5 +257,6 @@ class Chat extends React.Component {
 }
 
 function sortById(a, b) { return a.id - b.id }
+function sortByName(a, b) { return a.name.localeCompare(b.name) }
 
 export default Chat

@@ -9,6 +9,7 @@ class ChatHeader extends React.Component {
             ? <ChatHeaderAuth
                 user={this.props.user}
                 onLogout={this.props.onLogout}
+                activeChat={this.props.activeChat}
             />
             : <ChatHeaderNonAuth
                 onLogin={this.props.onLogin}
