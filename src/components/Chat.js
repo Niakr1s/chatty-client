@@ -158,9 +158,8 @@ class Chat extends React.Component {
     }
 
     render() {
-        console.log(this.state)
         return (
-            <div className="chat h700px">
+            <div className="chat h700px" >
                 <div className="h100 w100">
                     <div className="flex blue space-between chat-header">
                         <ChatHeader
