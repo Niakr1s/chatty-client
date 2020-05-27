@@ -31,7 +31,7 @@ class ChatChatList extends React.Component {
                                 {chat.joined && <span
                                     className="float-right joined"
                                     title="unread counter"
-                                >0</span>}</li>
+                                >0</span>}</li> // TODO instead 0 - unread messages
                         })}
                     </ul>
                     <div className="userlist-footer darkblue"></div>
