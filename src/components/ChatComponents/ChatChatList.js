@@ -21,7 +21,7 @@ class ChatChatList extends React.Component {
                     <ul className="userlist overflow-y blue-gradient">
                         {this.props.chats.map((chat) => {
                             return <li
-                                className="userlist-item lightblue"
+                                className="userlist-item lightblue cursor-default"
                                 key={chat.name}
                                 onClick={() => {
                                     if (chat.joined) { this.props.leaveChat(chat.name) }
