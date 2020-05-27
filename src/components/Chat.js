@@ -38,12 +38,6 @@ class Chat extends React.Component {
     componentDidMount = () => {
         this.login()
 
-        ChatApi.GetLastNMessages(100, (messages) => {
-            this.setState({
-                messages: messages,
-            })
-        });
-
         ChatApi.GetLoggedUsers((users) => {
             this.setState((prevState) => {
                 return {
@@ -109,12 +103,20 @@ class Chat extends React.Component {
         })
     }
 
-    joinChat = (chatname) => {
-        ChatApi.JoinChat(chatname, () => {
-            this.setState((prevState) => {
-                let chat = prevState.chats.find((it) => it.name === chatname)
-                if (chat !== undefined) chat.joined = true  // TODO change on events instead
-                return prevState
+    joinChat = (name) => {
+        ChatApi.JoinChat(name, () => {
+            ChatApi.GetLastMessages(name, (messages) => {
+                this.setState((prevState) => {
+                    let chat = { name }
+                    let chats = prevState.chats;
+                    chats = chats.filter(it => it.name !== name)
+                    chat.joined = true
+                    chat.messages = messages === undefined ? [] : messages
+                    chats.push(chat)
+                    chats.sort(sortByName)
+                    // TODO change on events instead
+                    return { chats, activeChat: name }
+                })
             })
         })
     }

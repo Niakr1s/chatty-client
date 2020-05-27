@@ -35,12 +35,13 @@ export function GetClientID(onData, onErr) {
     })
 }
 
-export function GetLastNMessages(n, onData, onErr) {
-    axios.get(prefix + `/api/getLastNMessages/${n}`, { withCredentials: true }).then((response) => {
-        // console.log("GetLastNMessages succesful", response);
+export function GetLastMessages(chatname, onData, onErr) {
+    console.log("GetLastMessages start", chatname);
+    axios.post(prefix + `/api/loggedonly/getLastMessages`, { chatname }, { withCredentials: true }).then((response) => {
+        // console.log("GetLastMessages succesful", response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("GetLastNMessages error", error);
+        console.log("GetLastMessages error", error);
         if (onErr) onErr(error)
     })
 }
@@ -138,7 +139,7 @@ export function GetChats(onData, onErr) {
 
 export function JoinChat(chatname, onData, onErr) {
     return axios.post(prefix + `/api/loggedonly/joinChat`, { chatname }, { withCredentials: true }).then((response) => {
-        // console.log("JoinChat succesful", response);
+        console.log("JoinChat succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
         // console.log("JoinChat failure", error)
