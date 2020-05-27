@@ -21,14 +21,14 @@ class ChatChatList extends React.Component {
                     <ul className="userlist overflow-y blue-gradient">
                         {this.props.chats.map((chat) => {
                             return <li
-                                className="userlist-item lightblue cursor-default"
+                                className={"userlist-item lightblue cursor-default " +
+                                    `${(this.props.activeChat === chat.name) && "chat-active"}`}
                                 key={chat.name}
                                 onClick={() => {
-                                    if (chat.joined) { this.props.leaveChat(chat.name) }
-                                    else { this.props.joinChat(chat.name) }
-                                }}
-                            >{chat.name}{chat.joined &&
-                                <span
+                                    if (!chat.joined) { this.props.joinChat(chat.name) }
+                                    else { this.props.setActiveChat(chat.name) }
+                                }}>{chat.name}
+                                {chat.joined && <span
                                     className="float-right joined"
                                     title="unread counter"
                                 >0</span>}</li>
@@ -36,7 +36,7 @@ class ChatChatList extends React.Component {
                     </ul>
                     <div className="userlist-footer darkblue"></div>
                 </div>
-            </div>
+            </div >
         )
     }
 }

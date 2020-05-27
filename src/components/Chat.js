@@ -27,6 +27,7 @@ class Chat extends React.Component {
             messages: [],
             loggedUsers: [],
             chats: [],
+            activeChat: "",
 
             showAuthModal: false,
             showUserList: false,
@@ -181,6 +182,10 @@ class Chat extends React.Component {
         })
     }
 
+    setActiveChat = (chatname) => {
+        this.setState({ activeChat: chatname })
+    }
+
     render() {
         return (
             <div className="chat h700px" >
@@ -216,8 +221,10 @@ class Chat extends React.Component {
                     this.state.showChatsList && <ChatChatList
                         close={() => this.setState({ showChatsList: false })}
                         chats={this.state.chats}
+                        activeChat={this.state.activeChat}
                         joinChat={this.joinChat}
                         leaveChat={this.leaveChat}
+                        setActiveChat={this.setActiveChat}
                     ></ChatChatList>
                 }
                 {

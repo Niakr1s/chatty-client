@@ -128,7 +128,7 @@ export function Authorize(user, onData, onErr) {
 
 export function GetChats(onData, onErr) {
     return axios.get(prefix + `/api/loggedonly/getChats`, { withCredentials: true }).then((response) => {
-        // console.log("GetChats succesful", response);
+        console.log("GetChats succesful", response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
         // console.log("GetChats failure", error)
