@@ -205,7 +205,7 @@ class Chat extends React.Component {
 
     render() {
         return (
-            <div className="chat h700px" >
+            <div className="chat h100" >
                 <div className="h100 w100">
                     <div className="flex blue space-between chat-header">
                         <ChatHeader

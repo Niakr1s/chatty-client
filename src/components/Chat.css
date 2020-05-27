@@ -105,6 +105,10 @@ body {
 
 /* main div */
 
+.App {
+    height: 100vh;
+}
+
 .chat {
     font-family: 'Open Sans', sans-serif;
     display: flex;
