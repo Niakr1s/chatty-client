@@ -1,8 +1,16 @@
 import React from "react"
+import { SortedSet } from "immutable-sorted"
 
 class ChatUserList extends React.Component {
     constructor(props) {
         super(props)
+    }
+
+    makeUserList = () => {
+        let res = this.props.chat && this.props.chat.users && [...this.props.chat.users].map((username) => {
+            return <li className="userlist-item lightblue" key={username}>{username}</li>
+        })
+        return res
     }
 
     render() {
@@ -19,9 +27,7 @@ class ChatUserList extends React.Component {
                         <span className="userlist-header-text">User list</span>
                     </div>
                     <ul className="userlist overflow-y blue-gradient">
-                        {this.props.chat && this.props.chat.users && this.props.chat.users.map((username, idx) => {
-                            return <li className="userlist-item lightblue" key={idx}>{username}</li>
-                        })}
+                        {this.makeUserList()}
                     </ul>
                     <div className="userlist-footer darkblue"></div>
                 </div>

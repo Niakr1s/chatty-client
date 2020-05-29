@@ -87,12 +87,15 @@ class Chat extends React.Component {
     joinChat = (chatname) => {
         ChatApi.JoinChat(chatname, () => {
             ChatApi.GetLastMessages(chatname, (messages) => {
-                this.setState((prevState) => {
-                    let chats = prevState.chats.set(chatname, {
-                        ...this.newChat(chatname, true),
-                        messages: messages === undefined ? new SortedMap() : messArrToMap(messages)
+                ChatApi.GetUsers(chatname, (users) => {
+                    this.setState((prevState) => {
+                        let chats = prevState.chats.set(chatname, {
+                            ...this.newChat(chatname, true),
+                            messages: messages === undefined ? new SortedMap() : messArrToMap(messages),
+                            users: users === undefined ? new SortedSet() : usersArrToSet(users),
+                        })
+                        return { chats, activeChat: chatname }
                     })
-                    return { chats, activeChat: chatname }
                 })
             })
         })
@@ -193,12 +196,17 @@ function compareLexic(a, b) { return a.localeCompare(b) }
 function chatArrToMap(chats) {
     return new SortedMap([...chats.map((chat) => {
         chat.messages = messArrToMap(chat.messages)
+        chat.users = usersArrToSet(chat.users)
         return [chat.chat, chat]
     })], compareLexic)
 }
 
 function messArrToMap(messages) {
     return new SortedMap([...messages.map((message) => [message.id, message])])
+}
+
+function usersArrToSet(users) {
+    return new SortedSet(users.map(user => user.user))
 }
 
 

@@ -27,7 +27,7 @@ class ChatChatList extends React.Component {
                                 key={chatname}
                                 onClick={() => {
                                     if (!chat.joined) { this.props.joinChat(chat.chat) }
-                                    else { console.log("setting chat", chat.chat); this.props.setActiveChat(chat.chat) }
+                                    else { this.props.setActiveChat(chat.chat) }
                                 }}>{chatname}
                                 {chat.joined && <span
                                     className="float-right joined"

@@ -116,9 +116,9 @@ export function GetChats(onData, onErr) {
     })
 }
 
-export function GetUsers(onData, onErr) {
-    console.log("GetUsers start")
-    return axios.get(prefix + `/api/loggedonly/getChats`, { withCredentials: true }).then((response) => {
+export function GetUsers(chatname, onData, onErr) {
+    console.log("GetUsers start", chatname)
+    return axios.post(prefix + `/api/loggedonly/getUsers`, { chat: chatname }, { withCredentials: true }).then((response) => {
         console.log("GetUsers succes", response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
