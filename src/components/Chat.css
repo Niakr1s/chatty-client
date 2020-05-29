@@ -124,14 +124,11 @@ body {
 }
 
 .chat-right {
-    position: absolute;
     height: 100%;
     width: 140px;
-    right: 0;
 }
 
 .chat-left {
-    position: absolute;
     height: 100%;
     width: 140px;
 }

@@ -9,7 +9,7 @@ class ChatUserList extends React.Component {
         return (
             <div
                 id="chat-right-modal"
-                className="chat-modal"
+                // className="chat-modal"
                 onClick={(event) => {
                     if (event.target.id === "chat-right-modal") { this.props.close() }
                 }}
@@ -19,7 +19,7 @@ class ChatUserList extends React.Component {
                         <span className="userlist-header-text">User list</span>
                     </div>
                     <ul className="userlist overflow-y blue-gradient">
-                        {this.props.loggedUsers.map((username, idx) => {
+                        {this.props.chat && this.props.chat.users && this.props.chat.users.map((username, idx) => {
                             return <li className="userlist-item lightblue" key={idx}>{username}</li>
                         })}
                     </ul>

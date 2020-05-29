@@ -15,7 +15,7 @@ import * as ChatApi from './api/ChatApi'
 
 import HeaderButtons from "./ChatComponents/HeaderButtons"
 
-import { SortedMap } from 'immutable-sorted'
+import { SortedMap, SortedSet } from 'immutable-sorted'
 
 class Chat extends React.Component {
     constructor(props) {
@@ -27,8 +27,6 @@ class Chat extends React.Component {
             chats: new SortedMap(),
 
             showAuthModal: false,
-            showUserList: false,
-            showChatsList: false,
         }
     }
 
@@ -137,7 +135,7 @@ class Chat extends React.Component {
     }
 
     newChat = (chatname, joined) => {
-        return { chat: chatname, messages: new SortedMap(), joined }
+        return { chat: chatname, messages: new SortedMap(), joined, users: new SortedSet() }
     }
 
     setActiveChat = (chatname) => {
@@ -147,6 +145,14 @@ class Chat extends React.Component {
     render() {
         return (
             <div className="chat h100" >
+                <ChatChatList
+                    close={() => this.setState({ showChatsList: false })}
+                    chats={this.state.chats}
+                    activeChat={this.state.activeChat}
+                    joinChat={this.joinChat}
+                    leaveChat={this.leaveChat}
+                    setActiveChat={this.setActiveChat}
+                ></ChatChatList>
                 <div className="h100 w100">
                     <div className="flex blue space-between chat-header">
                         <ChatHeader
@@ -169,26 +175,14 @@ class Chat extends React.Component {
                         onPostMessage={this.postMessage}
                     ></ChatInput>
                 </div >
-                {this.state.showUserList && <ChatUserList
+                <ChatUserList
                     close={() => this.setState({ showUserList: false })}
+                    chat={this.state.chats.get(this.state.activeChat)}
                 ></ChatUserList>
-                }
-                {
-                    this.state.showChatsList && <ChatChatList
-                        close={() => this.setState({ showChatsList: false })}
-                        chats={this.state.chats}
-                        activeChat={this.state.activeChat}
-                        joinChat={this.joinChat}
-                        leaveChat={this.leaveChat}
-                        setActiveChat={this.setActiveChat}
-                    ></ChatChatList>
-                }
-                {
-                    this.state.showAuthModal ? <AuthModal
-                        close={() => this.setState({ showAuthModal: false })}
-                        login={this.login}
-                    ></AuthModal> : null
-                }
+                {this.state.showAuthModal ? <AuthModal
+                    close={() => this.setState({ showAuthModal: false })}
+                    login={this.login}
+                ></AuthModal> : null}
             </div >
         )
     }

@@ -9,19 +9,18 @@ class ChatChatList extends React.Component {
         return (
             <div
                 id="chat-left-modal"
-                className="chat-modal"
+                className="chat-left"
                 onClick={(event) => {
                     if (event.target.id === "chat-left-modal") { this.props.close() }
                 }}
             >
-                <div className="chat-left darkblue">
+                <div className="darkblue chat-left">
                     <div className="userlist-header blue">
                         <span className="userlist-header-text">Chat list</span>
                     </div>
                     <ul className="userlist overflow-y blue-gradient">
                         {Array.from(this.props.chats.keys()).map((chatname) => {
                             let chat = this.props.chats.get(chatname)
-                            console.log("chat: ", chat)
                             return <li
                                 className={"userlist-item lightblue cursor-default " +
                                     `${(this.props.activeChat === chat.chat) && "chat-active"}`}
