@@ -5,134 +5,135 @@ const prefix = "http://127.0.0.1:8080"
 
 // returns data
 export function PostMessage(message, onData, onErr) {
+    console.log("PostMessage start", message);
     return axios.post(prefix + "/api/loggedonly/postMessage", message, { withCredentials: true }).then((response) => {
-        // console.log("PostMessage succesful", response)
+        console.log("PostMessage succes", message, response.data)
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("PostMessage error", error);
-        if (onErr) onErr(error)
-    })
-}
-
-export function GetMessage(id, onData, onErr) {
-    return axios.get(prefix + `/api/getMessage/${id}`, { withCredentials: true }).then((response) => {
-        // console.log("GetMessage succesful", response);
-        if (onData) onData(response.data)
-    }).catch((error) => {
-        console.log("GetMessage error", error);
+        console.log("PostMessage fail", message, error);
         if (onErr) onErr(error)
     })
 }
 
 export function GetLastMessages(chatname, onData, onErr) {
     console.log("GetLastMessages start", chatname);
-    axios.post(prefix + `/api/loggedonly/getLastMessages`, { chatname }, { withCredentials: true }).then((response) => {
-        // console.log("GetLastMessages succesful", response.data);
+    axios.post(prefix + `/api/loggedonly/getLastMessages`, { chat: chatname }, { withCredentials: true }).then((response) => {
+        console.log("GetLastMessages succes", chatname, response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("GetLastMessages error", error);
+        console.log("GetLastMessages fail", chatname, error);
         if (onErr) onErr(error)
     })
 }
 
 
 export function Poll(onData, onErr) {
+    console.log("Poll start");
     return axios.get(prefix + `/api/loggedonly/poll`, { withCredentials: true }).then((response) => {
         console.log("Poll succes", response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("Poll failure", error);
+        console.log("Poll fail", error);
         if (onErr) onErr(error)
     })
 }
 
-export function UserLogin(user, onData, onErr) {
-    console.log("UserLogin start login", user);
-    return axios.post(prefix + `/api/login`, user, { withCredentials: true }).then((response) => {
-        console.log("UserLogin succesful", response);
+export function UserLogin(username, onData, onErr) {
+    console.log("UserLogin start", username);
+    return axios.post(prefix + `/api/login`, { user: username }, { withCredentials: true }).then((response) => {
+        console.log("UserLogin succes", username, response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("UserLogin failure", error.data);
+        console.log("UserLogin fail", username, error.data);
         if (onErr) onErr(error)
     })
 }
 
 // logins only with cookie data
-export function UserLoginLogged(user, onData, onErr) {
-    return axios.post(prefix + `/api/loggedonly/login`, user, { withCredentials: true }).then((response) => {
-        // console.log("UserLogin succesful", response);
+export function UserLoginLogged(onData, onErr) {
+    console.log("UserLoginLogged start");
+    return axios.post(prefix + `/api/loggedonly/login`, {}, { withCredentials: true }).then((response) => {
+        console.log("UserLoginLogged succes", response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
+        console.log("UserLoginLogged fail", error);
         if (onErr) onErr(error)
     })
 }
 
-export function UserLogout(user, onData, onErr) {
-    return axios.post(prefix + `/api/loggedonly/logout`, user, { withCredentials: true }).then((response) => {
-        // console.log("UserLogout succesful", response);
+export function UserLogout(onData, onErr) {
+    console.log("UserLogout start")
+    return axios.post(prefix + `/api/loggedonly/logout`, {}, { withCredentials: true }).then((response) => {
+        console.log("UserLogout succes", response);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("couldn't logout user", user, error)
+        console.log("UserLogout fail", error)
         if (onErr) onErr(error)
     })
 }
 
 export function KeepAlive(onData, onErr) {
+    // console.log("KeepAlive start")
     return axios.put(prefix + `/api/loggedonly/keepalive`, {}, { withCredentials: true }).then((response) => {
-        console.log("KeepAlive succes", response.data);
+        // console.log("KeepAlive succes", response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("KeepAlive failure", error)
+        // console.log("KeepAlive fail", error)
         if (onErr) onErr(error)
     })
 }
 
 export function UserRegister(user, onData, onErr) {
+    console.log("UserRegister start", user);
     return axios.post(prefix + `/api/register`, user).then((response) => {
-        // console.log("UserRegister succesful", response);
+        console.log("UserRegister succes", user, response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("couldn't register user", user, error)
+        console.log("UserRegister fail", user, error)
         if (onErr) onErr(error)
     })
 }
 
 export function Authorize(user, onData, onErr) {
+    console.log("Authorize start", user);
     return axios.post(prefix + `/api/authorize`, user, { withCredentials: true }).then((response) => {
-        // console.log("UserRegister succesful", response);
+        console.log("Authorize succes", user, response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        console.log("couldn't authorize", user, error)
+        console.log("Authorize fail", user, error)
         if (onErr) onErr(error)
     })
 }
 
 export function GetChats(onData, onErr) {
+    console.log("GetChats start")
     return axios.get(prefix + `/api/loggedonly/getChats`, { withCredentials: true }).then((response) => {
-        console.log("GetChats succesful", response.data);
+        console.log("GetChats succes", response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        // console.log("GetChats failure", error)
+        console.log("GetChats fail", error)
         if (onErr) onErr(error)
     })
 }
 
 export function JoinChat(chatname, onData, onErr) {
-    return axios.post(prefix + `/api/loggedonly/joinChat`, { chatname }, { withCredentials: true }).then((response) => {
-        console.log("JoinChat succesful", response);
+    console.log("JoinChat start", chatname);
+    return axios.post(prefix + `/api/loggedonly/joinChat`, { chat: chatname }, { withCredentials: true }).then((response) => {
+        console.log("JoinChat succes", chatname, response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        // console.log("JoinChat failure", error)
+        console.log("JoinChat fail", chatname, error)
         if (onErr) onErr(error)
     })
 }
 
 export function LeaveChat(chatname, onData, onErr) {
-    return axios.post(prefix + `/api/loggedonly/leaveChat`, { chatname }, { withCredentials: true }).then((response) => {
-        // console.log("LeaveChat succesful", response);
+    console.log("LeaveChat start", chatname)
+    return axios.post(prefix + `/api/loggedonly/leaveChat`, { chat: chatname }, { withCredentials: true }).then((response) => {
+        console.log("LeaveChat succes", chatname, response.data);
         if (onData) onData(response.data)
     }).catch((error) => {
-        // console.log("LeaveChat failure", error)
+        console.log("LeaveChat fail", chatname, error)
         if (onErr) onErr(error)
     })
 }
