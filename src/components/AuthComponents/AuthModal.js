@@ -24,13 +24,13 @@ class AuthModal extends React.Component {
     innerComponent = () => {
         return this.state.showLogin
             ? <AuthLogin
-                change={() => this.changeToRegister()}
-                close={() => this.props.close()}
-                login={(name) => this.props.login(name)}
+                change={this.changeToRegister}
+                close={this.props.close}
+                login={this.props.login}
             ></AuthLogin>
             : <AuthRegister
-                change={() => this.changeToLogin()}
-                close={() => this.props.close()}
+                change={this.changeToLogin}
+                close={this.props.close}
             ></AuthRegister>
     }
 

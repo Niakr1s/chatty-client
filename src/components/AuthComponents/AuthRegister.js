@@ -9,7 +9,7 @@ class AuthRegister extends React.Component {
         super(props);
 
         this.state = {
-            name: "",
+            user: "",
             email: "",
             password: "",
 
@@ -19,7 +19,7 @@ class AuthRegister extends React.Component {
 
     register = () => {
         UserRegister({
-            name: this.state.name,
+            user: this.state.user,
             email: this.state.email,
             password: this.state.password
         }, (data) => {
@@ -44,8 +44,8 @@ class AuthRegister extends React.Component {
                                 <td>
                                     <input
                                         className="no-border"
-                                        value={this.state.name}
-                                        onChange={(event) => this.setState({ name: event.target.value })}
+                                        value={this.state.user}
+                                        onChange={(event) => this.setState({ user: event.target.value })}
                                     ></input>
                                 </td>
                             </tr>

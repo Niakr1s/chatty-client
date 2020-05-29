@@ -7,28 +7,22 @@ class ChatHeaderNonAuth extends React.Component {
         super(props);
 
         this.state = {
-            name: "",
+            user: "",
         }
     }
 
     onUsernameSubmit = (event) => {
         event.preventDefault();
 
-        if (!this.isUsernameValid(this.state.name)) return;
+        if (!this.isUsernameValid(this.state.user)) return;
 
-        if (this.props.onLogin) this.props.onLogin({ name: this.state.name });
+        if (this.props.onLogin) this.props.onLogin(this.state.user);
     }
 
-    isUsernameValid = (name) => {
-        if (!name) return false;
+    isUsernameValid = (user) => { return user !== "" }
 
-        return true;
-    }
-
-    updateName = (name) => {
-        this.setState({
-            name,
-        })
+    updateName = (user) => {
+        this.setState({ user })
     }
 
     render = () => {
@@ -42,7 +36,7 @@ class ChatHeaderNonAuth extends React.Component {
                 <button
                     className="no-border blue"
                     type="submit"
-                    disabled={!this.state.name}
+                    disabled={!this.state.user}
                 ><Icon name="angle right"></Icon></button>
             </div>
         </form >

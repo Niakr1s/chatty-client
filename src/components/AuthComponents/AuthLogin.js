@@ -8,7 +8,7 @@ class AuthLogin extends React.Component {
         super(props);
 
         this.state = {
-            name: "",
+            user: "",
             password: "",
 
             error: "",
@@ -16,7 +16,7 @@ class AuthLogin extends React.Component {
     }
 
     getAuthToken = () => {
-        Authorize({ name: this.state.name, password: this.state.password }, (data) => {
+        Authorize({ user: this.state.user, password: this.state.password }, (data) => {
             this.props.login(data.user);
             this.props.close();
         }, (error) => {
@@ -38,8 +38,8 @@ class AuthLogin extends React.Component {
                                 <td>
                                     <input
                                         className="no-border"
-                                        value={this.state.name}
-                                        onChange={(event) => this.setState({ name: event.target.value })}
+                                        value={this.state.user}
+                                        onChange={(event) => this.setState({ user: event.target.value })}
                                     ></input>
                                 </td>
                             </tr>

@@ -22,12 +22,12 @@ class ChatChatList extends React.Component {
                         {this.props.chats.map((chat) => {
                             return <li
                                 className={"userlist-item lightblue cursor-default " +
-                                    `${(this.props.activeChat === chat.name) && "chat-active"}`}
-                                key={chat.name}
+                                    `${(this.props.activeChat === chat.chat) && "chat-active"}`}
+                                key={chat.chat}
                                 onClick={() => {
-                                    if (!chat.joined) { this.props.joinChat(chat.name) }
-                                    else { this.props.setActiveChat(chat.name) }
-                                }}>{chat.name}
+                                    if (!chat.joined) { this.props.joinChat(chat.chat) }
+                                    else { this.props.setActiveChat(chat.chat) }
+                                }}>{chat.chat}
                                 {chat.joined && <span
                                     className="float-right joined"
                                     title="unread counter"

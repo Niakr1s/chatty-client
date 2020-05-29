@@ -20,14 +20,9 @@ class Chat extends React.Component {
         super(props);
 
         this.state = {
-            user: {
-                name: "",
-                loginToken: 0,
-            },
-            messages: [],
-            loggedUsers: [],
-            chats: [],
+            username: "",
             activeChat: "",
+            chats: [],
 
             showAuthModal: false,
             showUserList: false,
@@ -36,11 +31,12 @@ class Chat extends React.Component {
     }
 
     componentDidMount = () => {
-        this.login()
+        // trying to login
+        ChatApi.UserLoginLogged((data) => this.userLogged(data.user))
     }
 
     startRequestOnTimeout = (successTimeout, failureTimeout, apiFn, onFailure) => {
-        if (this.state.user.name === "") {
+        if (this.state.username === "") {
             return;
         }
 
@@ -60,31 +56,27 @@ class Chat extends React.Component {
     }
 
     logout = () => {
-        console.log(`Logouting user:`, this.state.user)
+        console.log(`Logouting user:`, this.state.username)
 
-        ChatApi.UserLogout(this.state.user).then(() => {
-            this.setState((prevState) => {
-                return { user: { ...prevState.user, name: "" }, chats: [] }
-            })
+        ChatApi.UserLogout().then(() => {
+            this.setState({ username: "", chats: [] })
         })
     }
 
-    login = (user) => {
-        console.log(`Logging user:`, user)
+    login = (username) => {
+        console.log(`Logging user:`, username)
 
-        ChatApi.UserLogin(user, (data) => this.userLogged(data), (error) => {
-            ChatApi.UserLoginLogged(user, (data) => this.userLogged(data), (error) => {
+        ChatApi.UserLogin(username, (data) => this.userLogged(data.user), () => {
+            ChatApi.UserLoginLogged((data) => this.userLogged(data.user), (error) => {
                 console.log(`Couldn't login user:`, error)
             })
         })
     }
 
 
-    userLogged = (user) => {
-        console.log(`logged user`, user)
-        this.setState((prevState) => {
-            return { user: { ...prevState.user, ...user } }
-        })
+    userLogged = (username) => {
+        console.log(`logged user`, username)
+        this.setState({ username })
         this.startRequestOnTimeout(10 * 1000, 10 * 1000, ChatApi.KeepAlive, () => this.logout())
         this.startRequestOnTimeout(10 * 1000, 0, ChatApi.Poll, () => this.logout())
         ChatApi.GetChats((chats) => {
@@ -95,19 +87,19 @@ class Chat extends React.Component {
         })
     }
 
-    joinChat = (name) => {
-        ChatApi.JoinChat(name, () => {
-            ChatApi.GetLastMessages(name, (messages) => {
+    joinChat = (chatname) => {
+        ChatApi.JoinChat(chatname, () => {
+            ChatApi.GetLastMessages(chatname, (messages) => {
                 this.setState((prevState) => {
-                    let chat = { name }
+                    let chat = { chat: chatname }
                     let chats = prevState.chats;
-                    chats = chats.filter(it => it.name !== name)
+                    chats = chats.filter(it => it.chat !== chatname)
                     chat.joined = true
                     chat.messages = messages === undefined ? [] : messages
                     chats.push(chat)
                     chats.sort(sortByName)
                     // TODO change on events instead
-                    return { chats, activeChat: name }
+                    return { chats, activeChat: chatname }
                 })
             })
         })
@@ -117,7 +109,7 @@ class Chat extends React.Component {
     leaveChat = (chatname) => {
         ChatApi.LeaveChat(chatname, () => {
             this.setState((prevState) => {
-                let chat = prevState.chats.find((it) => it.name === chatname)
+                let chat = prevState.chats.find((it) => it.chat === chatname)
                 if (chat !== undefined) chat.joined = false  // TODO change on events instead
                 return prevState
             })
@@ -125,57 +117,24 @@ class Chat extends React.Component {
     }
 
     postMessage = (messageText) => {
-        if (!this.state.user) { console.log("Can't post message, no logged user!"); return; }
+        if (!this.state.username) { console.log("Can't post message, no logged user!"); return; }
 
         if (!messageText) { console.log("Can't post empty message!"); return; }
 
-        console.log(`Posting message: "${messageText}" for user`, this.state.user);
+        console.log(`Posting message: "${messageText}" for user`, this.state.username);
         ChatApi.PostMessage({ text: messageText, chat: this.state.activeChat }, (message) => {
             this.appendMessage(message) // TODO remove after impl events
         });
     }
 
-    appendUserAction = (userAction) => {
-        // if it's us, check if it pseudo logout, happening after login with password
-        if (userAction.action === "logout" && userAction.name === this.state.user.name) {
-            // to ensure, we are sending KeepAlivePackage
-            // and on error - clearing user.name
-            ChatApi.KeepAlive(this.state.user, () => { }, (error) => {
-                this.setState({ user: { ...this.state.user, name: "" } })
-            })
-        }
-
-        this.setState((prevState, props) => {
-            let loggedUsers = [...prevState.loggedUsers];
-
-            let user = { ...prevState.user }
-
-            if (userAction.action === "login") {
-                loggedUsers.push(userAction.name);
-            } else if (userAction.action === "logout") {
-                loggedUsers = loggedUsers.filter((it) => it !== userAction.name)
-
-                // if it is our username = logout!
-                if (userAction.name === this.state.user.name) {
-                    ChatApi.KeepAlive(this.state.user, () => { }, (error) => { user.name = "" })
-                }
-            }
-
-            loggedUsers = loggedUsers.filter((name) => name !== prevState.user.name);
-            loggedUsers.sort();
-
-            return { loggedUsers, user };
-        })
-    }
-
     appendMessage = (message) => {
         this.setState((prevState) => {
             let chats = prevState.chats
-            let index = chats.findIndex((chat) => chat.name === message.chat)
+            let index = chats.findIndex((chat) => chat.chat === message.chat)
             let chat = index === -1 ? this.newChat(message.chat, true) : chats[index]
             console.log("appendMessage:", message, chats, chat)
 
-            chats = chats.filter((chat) => chat.name !== message.chat)
+            chats = chats.filter((chat) => chat.chat !== message.chat)
 
             let messages = chat.messages.filter((it) => it.id !== message.id)
             messages.push(message)
@@ -203,11 +162,9 @@ class Chat extends React.Component {
                 <div className="h100 w100">
                     <div className="flex blue space-between chat-header">
                         <ChatHeader
-                            user={this.state.user}
+                            user={this.state.username}
                             onLogout={this.logout}
-                            onLogin={(user) => {
-                                this.login(user)
-                            }}
+                            onLogin={this.login}
                         ></ChatHeader>
                         {/* TODO add class ChatInfo or something */}
                         <span className="float-right">{this.state.activeChat && "Chat: " + this.state.activeChat}</span>
@@ -227,7 +184,6 @@ class Chat extends React.Component {
                 </div >
                 {this.state.showUserList && <ChatUserList
                     close={() => this.setState({ showUserList: false })}
-                    loggedUsers={this.state.loggedUsers}
                 ></ChatUserList>
                 }
                 {
@@ -243,7 +199,7 @@ class Chat extends React.Component {
                 {
                     this.state.showAuthModal ? <AuthModal
                         close={() => this.setState({ showAuthModal: false })}
-                        login={(name) => this.login(name)}
+                        login={this.login}
                     ></AuthModal> : null
                 }
             </div >
@@ -252,6 +208,6 @@ class Chat extends React.Component {
 }
 
 function sortById(a, b) { return a.id - b.id }
-function sortByName(a, b) { return a.name.localeCompare(b.name) }
+function sortByName(a, b) { return a.chat.localeCompare(b.chat) }
 
 export default Chat

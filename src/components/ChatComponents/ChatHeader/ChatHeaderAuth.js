@@ -10,14 +10,12 @@ class ChatHeaderAuth extends React.Component {
 
     render = () => {
         return <div className="chat-username blue">
-            <div>
-                <div className="chat-username-text no-border lightblue">{this.props.user.name}
-                </div>
-                <button
-                    className="no-border blue"
-                    onClick={(event) => this.onLogoutClick(event)}
-                ><Icon name="log out"></Icon></button>
+            <div className="chat-username-text no-border lightblue">{this.props.user}
             </div>
+            <button
+                className="no-border blue"
+                onClick={(event) => this.onLogoutClick(event)}
+            ><Icon name="log out"></Icon></button>
         </div>
     }
 }
