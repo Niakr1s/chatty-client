@@ -22,7 +22,7 @@ class Chat extends React.Component {
         this.state = {
             username: "",
             activeChat: "",
-            chats: [],
+            chats: new Map(),
 
             showAuthModal: false,
             showUserList: false,
@@ -59,7 +59,7 @@ class Chat extends React.Component {
         console.log(`Logouting user:`, this.state.username)
 
         ChatApi.UserLogout().then(() => {
-            this.setState({ username: "", chats: [] })
+            this.setState({ username: "", actuveChat: "", chats: new Map() })
         })
     }
 
@@ -80,10 +80,7 @@ class Chat extends React.Component {
         this.startRequestOnTimeout(10 * 1000, 10 * 1000, ChatApi.KeepAlive, () => this.logout())
         this.startRequestOnTimeout(10 * 1000, 0, ChatApi.Poll, () => this.logout())
         ChatApi.GetChats((chats) => {
-            chats.sort(sortByName)
-            this.setState({
-                chats,
-            })
+            this.setState({ chats: chatArrToMap(chats) })
         })
     }
 
@@ -91,15 +88,13 @@ class Chat extends React.Component {
         ChatApi.JoinChat(chatname, () => {
             ChatApi.GetLastMessages(chatname, (messages) => {
                 this.setState((prevState) => {
-                    let chat = { chat: chatname }
-                    let chats = prevState.chats;
-                    chats = chats.filter(it => it.chat !== chatname)
-                    chat.joined = true
-                    chat.messages = messages === undefined ? [] : messages
-                    chats.push(chat)
-                    chats.sort(sortByName)
-                    // TODO change on events instead
-                    return { chats, activeChat: chatname }
+                    prevState.chats.set(chatname, {
+                        chat: chatname,
+                        joined: true,
+                        messages: messages === undefined ? new Map() : messArrToMap(messages)
+                    })
+                    console.log("joinChat: prevState.chats", prevState.chats)
+                    return { chats: prevState.chats, activeChat: chatname }
                 })
             })
         })
@@ -130,26 +125,17 @@ class Chat extends React.Component {
     appendMessage = (message) => {
         this.setState((prevState) => {
             let chats = prevState.chats
-            let index = chats.findIndex((chat) => chat.chat === message.chat)
-            let chat = index === -1 ? this.newChat(message.chat, true) : chats[index]
-            console.log("appendMessage:", message, chats, chat)
+            let chat = chats.get(message.chat) || this.newChat(message.chat, false)
 
-            chats = chats.filter((chat) => chat.chat !== message.chat)
+            chat.messages.set(message.id, message)
 
-            let messages = chat.messages.filter((it) => it.id !== message.id)
-            messages.push(message)
-            messages.sort(sortById)
-
-            chat.messages = messages
-            chats.push(chat)
-            chats.sort(sortByName)
-
-            return { chats }
+            chats.set(chat.chat, chat)
+            return { chats: new Map([...chats.entries()].sort(sortMapByKeyLexic)) }
         })
     }
 
     newChat = (chatname, joined) => {
-        return { chatname, messages: [], joined }
+        return { chatname, messages: new Map(), joined }
     }
 
     setActiveChat = (chatname) => {
@@ -209,5 +195,20 @@ class Chat extends React.Component {
 
 function sortById(a, b) { return a.id - b.id }
 function sortByName(a, b) { return a.chat.localeCompare(b.chat) }
+
+function sortMapByKey(a, b) { return a[0] - b[0] }
+function sortMapByKeyLexic(a, b) { return a[0].localeCompare(b[0]) }
+
+function chatArrToMap(chats) {
+    return new Map([...chats.map((chat) => {
+        chat.messages = messArrToMap(chat.messages)
+        return [chat.chat, chat]
+    })].sort(sortMapByKeyLexic))
+}
+
+function messArrToMap(messages) {
+    return new Map([...messages.map((message) => [message.id, message])].sort(sortMapByKey))
+}
+
 
 export default Chat

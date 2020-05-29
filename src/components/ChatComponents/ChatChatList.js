@@ -19,7 +19,8 @@ class ChatChatList extends React.Component {
                         <span className="userlist-header-text">Chat list</span>
                     </div>
                     <ul className="userlist overflow-y blue-gradient">
-                        {this.props.chats.map((chat) => {
+                        {Array.from(this.props.chats.keys()).map((chatname) => {
+                            let chat = this.props.chats.get(chatname)
                             return <li
                                 className={"userlist-item lightblue cursor-default " +
                                     `${(this.props.activeChat === chat.chat) && "chat-active"}`}
