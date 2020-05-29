@@ -37,14 +37,6 @@ class Chat extends React.Component {
 
     componentDidMount = () => {
         this.login()
-
-        ChatApi.GetLoggedUsers((users) => {
-            this.setState((prevState) => {
-                return {
-                    loggedUsers: users.sort(),
-                }
-            })
-        })
     }
 
     startRequestOnTimeout = (successTimeout, failureTimeout, apiFn, onFailure) => {

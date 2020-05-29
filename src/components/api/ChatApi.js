@@ -24,17 +24,6 @@ export function GetMessage(id, onData, onErr) {
     })
 }
 
-
-export function GetClientID(onData, onErr) {
-    return axios.get(prefix + `/api/getClientID`, { withCredentials: true }).then((response) => {
-        // console.log("GetClientID succesful", response);
-        if (onData) onData(response.data)
-    }).catch((error) => {
-        console.log("GetClientID error", error);
-        if (onErr) onErr(error)
-    })
-}
-
 export function GetLastMessages(chatname, onData, onErr) {
     console.log("GetLastMessages start", chatname);
     axios.post(prefix + `/api/loggedonly/getLastMessages`, { chatname }, { withCredentials: true }).then((response) => {
@@ -58,8 +47,9 @@ export function Poll(onData, onErr) {
 }
 
 export function UserLogin(user, onData, onErr) {
+    console.log("UserLogin start login", user);
     return axios.post(prefix + `/api/login`, user, { withCredentials: true }).then((response) => {
-        // console.log("UserLogin succesful", response);
+        console.log("UserLogin succesful", response);
         if (onData) onData(response.data)
     }).catch((error) => {
         console.log("UserLogin failure", error.data);
@@ -93,16 +83,6 @@ export function KeepAlive(onData, onErr) {
         if (onData) onData(response.data)
     }).catch((error) => {
         console.log("KeepAlive failure", error)
-        if (onErr) onErr(error)
-    })
-}
-
-export function GetLoggedUsers(onData, onErr) {
-    return axios.get(prefix + `/api/getLoggedUsers`, { withCredentials: true }).then((response) => {
-        // console.log("GetLoggedUsers succesful", response);
-        if (onData) onData(response.data)
-    }).catch((error) => {
-        console.log("couldn't get logged users", error)
         if (onErr) onErr(error)
     })
 }
