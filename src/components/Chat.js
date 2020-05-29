@@ -15,6 +15,8 @@ import * as ChatApi from './api/ChatApi'
 
 import HeaderButtons from "./ChatComponents/HeaderButtons"
 
+import { SortedMap } from 'immutable-sorted'
+
 class Chat extends React.Component {
     constructor(props) {
         super(props);
@@ -22,7 +24,7 @@ class Chat extends React.Component {
         this.state = {
             username: "",
             activeChat: "",
-            chats: new Map(),
+            chats: new SortedMap(),
 
             showAuthModal: false,
             showUserList: false,
@@ -59,7 +61,7 @@ class Chat extends React.Component {
         console.log(`Logouting user:`, this.state.username)
 
         ChatApi.UserLogout().then(() => {
-            this.setState({ username: "", actuveChat: "", chats: new Map() })
+            this.setState({ username: "", activeChat: "", chats: new Map() })
         })
     }
 
@@ -88,13 +90,11 @@ class Chat extends React.Component {
         ChatApi.JoinChat(chatname, () => {
             ChatApi.GetLastMessages(chatname, (messages) => {
                 this.setState((prevState) => {
-                    prevState.chats.set(chatname, {
-                        chat: chatname,
-                        joined: true,
-                        messages: messages === undefined ? new Map() : messArrToMap(messages)
+                    let chats = prevState.chats.set(chatname, {
+                        ...this.newChat(chatname, true),
+                        messages: messages === undefined ? new SortedMap() : messArrToMap(messages)
                     })
-                    console.log("joinChat: prevState.chats", prevState.chats)
-                    return { chats: prevState.chats, activeChat: chatname }
+                    return { chats, activeChat: chatname }
                 })
             })
         })
@@ -104,9 +104,11 @@ class Chat extends React.Component {
     leaveChat = (chatname) => {
         ChatApi.LeaveChat(chatname, () => {
             this.setState((prevState) => {
-                let chat = prevState.chats.find((it) => it.chat === chatname)
+                let chats = prevState.chats
+                let chat = chats.get(chatname)
                 if (chat !== undefined) chat.joined = false  // TODO change on events instead
-                return prevState
+                chats = chats.set(chatname, chat)
+                return { chats }
             })
         })
     }
@@ -127,15 +129,15 @@ class Chat extends React.Component {
             let chats = prevState.chats
             let chat = chats.get(message.chat) || this.newChat(message.chat, false)
 
-            chat.messages.set(message.id, message)
+            chat.messages = chat.messages.set(message.id, message)
 
             chats.set(chat.chat, chat)
-            return { chats: new Map([...chats.entries()].sort(sortMapByKeyLexic)) }
+            return { chats }
         })
     }
 
     newChat = (chatname, joined) => {
-        return { chatname, messages: new Map(), joined }
+        return { chat: chatname, messages: new SortedMap(), joined }
     }
 
     setActiveChat = (chatname) => {
@@ -161,8 +163,7 @@ class Chat extends React.Component {
                         />
                     </div>
                     <ChatBox
-                        chats={this.state.chats}
-                        activeChat={this.state.activeChat}
+                        chat={this.state.chats.get(this.state.activeChat)}
                     ></ChatBox>
                     <ChatInput
                         onPostMessage={this.postMessage}
@@ -193,21 +194,17 @@ class Chat extends React.Component {
     }
 }
 
-function sortById(a, b) { return a.id - b.id }
-function sortByName(a, b) { return a.chat.localeCompare(b.chat) }
-
-function sortMapByKey(a, b) { return a[0] - b[0] }
-function sortMapByKeyLexic(a, b) { return a[0].localeCompare(b[0]) }
+function compareLexic(a, b) { return a.localeCompare(b) }
 
 function chatArrToMap(chats) {
-    return new Map([...chats.map((chat) => {
+    return new SortedMap([...chats.map((chat) => {
         chat.messages = messArrToMap(chat.messages)
         return [chat.chat, chat]
-    })].sort(sortMapByKeyLexic))
+    })], compareLexic)
 }
 
 function messArrToMap(messages) {
-    return new Map([...messages.map((message) => [message.id, message])].sort(sortMapByKey))
+    return new SortedMap([...messages.map((message) => [message.id, message])])
 }
 
 

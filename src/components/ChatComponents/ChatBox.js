@@ -14,19 +14,14 @@ class ChatBox extends React.Component {
         this.scrollToBottom();
     }
 
-    getActiveChat = () => {
-        return this.props.chats.get(this.props.activeChat)
-    }
-
     render = () => {
-        let activeChat = this.getActiveChat();
         return (
             <div className="chatbox overflow-y blue-gradient">
-                {activeChat && [...activeChat.messages.keys()].map((k) => {
-                    let m = activeChat.messages.get(k)
+                {this.props.chat && [...this.props.chat.messages.keys()].map((k) => {
+                    let m = this.props.chat.messages.get(k)
                     return <ChatLine
                         message={m}
-                        key={activeChat.chat + "_" + m.id.toString()}></ChatLine>
+                        key={k + "_" + m.id.toString()}></ChatLine>
                 })}
                 <div id="anchor" ref={(el) => { this.messagesEnd = el; }}></div>
             </div>

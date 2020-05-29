@@ -21,14 +21,15 @@ class ChatChatList extends React.Component {
                     <ul className="userlist overflow-y blue-gradient">
                         {Array.from(this.props.chats.keys()).map((chatname) => {
                             let chat = this.props.chats.get(chatname)
+                            console.log("chat: ", chat)
                             return <li
                                 className={"userlist-item lightblue cursor-default " +
                                     `${(this.props.activeChat === chat.chat) && "chat-active"}`}
-                                key={chat.chat}
+                                key={chatname}
                                 onClick={() => {
                                     if (!chat.joined) { this.props.joinChat(chat.chat) }
-                                    else { this.props.setActiveChat(chat.chat) }
-                                }}>{chat.chat}
+                                    else { console.log("setting chat", chat.chat); this.props.setActiveChat(chat.chat) }
+                                }}>{chatname}
                                 {chat.joined && <span
                                     className="float-right joined"
                                     title="unread counter"
