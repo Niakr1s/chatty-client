@@ -80,23 +80,15 @@ class Chat extends React.Component {
         this.startRequestOnTimeout(10 * 1000, 10 * 1000, ChatApi.KeepAlive, () => this.logout())
         this.startRequestOnTimeout(10 * 1000, 0, ChatApi.Poll, () => this.logout())
         ChatApi.GetChats((chats) => {
-            this.setState({ chats: chatArrToMap(chats) })
+            this.setState({ chats: chatReportsArrToMap(chats) })
         })
     }
 
     joinChat = (chatname) => {
-        ChatApi.JoinChat(chatname, () => {
-            ChatApi.GetLastMessages(chatname, (messages) => {
-                ChatApi.GetUsers(chatname, (users) => {
-                    this.setState((prevState) => {
-                        let chats = prevState.chats.set(chatname, {
-                            ...this.newChat(chatname, true),
-                            messages: messages === undefined ? new SortedMap() : messArrToMap(messages),
-                            users: users === undefined ? new SortedSet() : usersArrToSet(users),
-                        })
-                        return { chats, activeChat: chatname }
-                    })
-                })
+        ChatApi.JoinChat(chatname, (chatReport) => {
+            this.setState((prevState) => {
+                let chats = prevState.chats.set(chatname, chatReportToChat(chatReport))
+                return { chats, activeChat: chatname }
             })
         })
     }
@@ -193,12 +185,18 @@ class Chat extends React.Component {
 
 function compareLexic(a, b) { return a.localeCompare(b) }
 
-function chatArrToMap(chats) {
-    return new SortedMap([...chats.map((chat) => {
-        chat.messages = messArrToMap(chat.messages)
-        chat.users = usersArrToSet(chat.users)
-        return [chat.chat, chat]
+function chatReportsArrToMap(chatReports) {
+    return chatReports === undefined ? new SortedMap() : new SortedMap([...chatReports.map((chatReport) => {
+        return [chatReport.chat, chatReportToChat(chatReport)]
     })], compareLexic)
+}
+
+function chatReportToChat(chatReport) {
+    return {
+        ...chatReport,
+        messages: chatReport.messages === undefined ? new SortedMap() : messArrToMap(chatReport.messages),
+        users: chatReport.users == undefined ? new SortedSet() : usersArrToSet(chatReport.users)
+    }
 }
 
 function messArrToMap(messages) {
