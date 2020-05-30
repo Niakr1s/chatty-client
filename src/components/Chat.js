@@ -24,6 +24,8 @@ class Chat extends React.Component {
         this.state = {
             username: "",
             activeChat: "",
+
+            // { chat: chatname, messages: [ {user, chat, id, text, time} ], joined: bool, users: [ username ]}
             chats: new SortedMap(),
 
             showAuthModal: false,
