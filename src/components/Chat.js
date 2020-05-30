@@ -37,14 +37,53 @@ class Chat extends React.Component {
         ChatApi.UserLoginLogged((data) => this.userLogged(data.user))
     }
 
-    startRequestOnTimeout = (successTimeout, failureTimeout, apiFn, onFailure) => {
+    processEvent = (event) => {
+        let loginLogoutEventProcess = (processUsers) => {
+            this.setState(prevState => {
+                let chatname = event.event.chat
+                let username = event.event.user
+                let chats = prevState.chats
+                let chat = chats.get(chatname)
+                if (chat !== undefined && username !== prevState.username) chat.users = processUsers(chat.users)
+                chats = chats.set(chat.chat, chat)
+                return {chats}
+            });
+        }
+        
+
+        console.log("Start processing event", event)
+        switch (event.type) {
+            case "LoginEvent":
+                break
+            case "LogoutEvent":
+                break
+            case "ChatJoinEvent":
+                console.log("ChatJoinEvent")
+                loginLogoutEventProcess((users) => users.add(event.event.user))
+                break
+            case "ChatLeaveEvent":
+                console.log("ChatLeaveEvent")
+                loginLogoutEventProcess((users) => users.delete(event.event.user))
+                break
+            case "ChatCreatedEvent":
+                break
+            case "ChatRemovedEvent":
+                break
+            case "MessageEvent":
+                break
+            default:
+        }
+    }
+
+    startRequestOnTimeout = (successTimeout, failureTimeout, apiFn, onFailure, onData) => {
         if (this.state.username === "") {
             return;
         }
 
-        apiFn(() => {
+        apiFn((data) => {
+            if (onData) onData(data)
             setTimeout(() => {
-                this.startRequestOnTimeout(successTimeout, failureTimeout, apiFn, onFailure);
+                this.startRequestOnTimeout(successTimeout, failureTimeout, apiFn, onFailure, onData);
             }, successTimeout)
         }, () => {
             if (onFailure) {
@@ -52,7 +91,7 @@ class Chat extends React.Component {
                 return;
             }
             setTimeout(() => {
-                this.startRequestOnTimeout(successTimeout, failureTimeout, apiFn, onFailure);
+                this.startRequestOnTimeout(successTimeout, failureTimeout, apiFn, onFailure, onData);
             }, failureTimeout)
         })
     }
@@ -80,7 +119,7 @@ class Chat extends React.Component {
         console.log(`logged user`, username)
         this.setState({ username })
         this.startRequestOnTimeout(10 * 1000, 10 * 1000, ChatApi.KeepAlive, () => this.logout())
-        this.startRequestOnTimeout(100, 0, ChatApi.Poll, () => this.logout())
+        this.startRequestOnTimeout(100, 0, ChatApi.Poll, () => this.logout(), this.processEvent )
         ChatApi.GetChats((chats) => {
             this.setState({ chats: chatReportsArrToMap(chats) })
         })
