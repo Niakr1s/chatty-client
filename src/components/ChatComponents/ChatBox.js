@@ -2,28 +2,35 @@ import React from "react"
 import ChatLine from "./ChatLine";
 
 class ChatBox extends React.Component {
-    scrollToBottom = () => {
-        this.messagesEnd.scrollIntoView()
-    }
+    constructor(props) {
+        super(props)
 
-    componentDidMount = () => {
-        this.scrollToBottom();
+        // it's holds ["chatname", "scrollTop"]
+        this.scrolls = new Map()
+        this.myRef = React.createRef();
     }
 
     componentDidUpdate = () => {
-        this.scrollToBottom();
+        if (!this.props.chat) return
+        let lastScrollTop = this.scrolls.get(this.props.chat.chat);
+        if (lastScrollTop === undefined) lastScrollTop = this.myRef.current.scrollHeight;
+        this.myRef.current.scrollTop = lastScrollTop;
     }
 
     render = () => {
         return (
-            <div className="chatbox overflow-y blue-gradient">
-                {this.props.chat && [...this.props.chat.messages.keys()].map((k) => {
+            <div className="chatbox overflow-y blue-gradient" ref={this.myRef}
+                onScroll={() => { 
+                    if (!this.props.chat) return;
+                    this.scrolls.set(this.props.chat.chat, this.myRef.current.scrollTop);
+                    }
+                }>
+                {this.props.chat && [...this.props.chat.messages.keys()].map((k, idx, arr) => {
                     let m = this.props.chat.messages.get(k)
                     return <ChatLine
                         message={m}
                         key={k + "_" + m.id.toString()}></ChatLine>
                 })}
-                <div id="anchor" ref={(el) => { this.messagesEnd = el; }}></div>
             </div>
         )
     }

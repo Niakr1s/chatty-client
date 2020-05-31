@@ -234,7 +234,7 @@ body {
     margin: 0px 10px 10px 20px;
 }
 
-.chatline:nth-last-child(2) {
+.chatline:nth-last-child(1) {
     /* for anchor */
     margin-bottom: 0px;
 }
