@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 
-const prefix = process.env.NODE_ENV === "development" ? "http://localhost:8080" : "https://chatsie.herokuapp.com:8080"
+const prefix = process.env.NODE_ENV === "development" ? "http://localhost:8080" : "https://chatsie.herokuapp.com"
 
 // returns data
 export function PostMessage(message, onData, onErr) {
