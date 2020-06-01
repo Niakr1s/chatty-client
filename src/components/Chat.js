@@ -58,19 +58,28 @@ class Chat extends React.Component {
             case "LogoutEvent":
                 break
             case "ChatJoinEvent":
-                console.log("ChatJoinEvent")
                 loginLogoutEventProcess((users) => users.add(event.event.user))
                 break
             case "ChatLeaveEvent":
-                console.log("ChatLeaveEvent")
                 loginLogoutEventProcess((users) => users.delete(event.event.user))
                 break
             case "ChatCreatedEvent":
+                this.setState((prevState) => {
+                    prevState.chats = prevState.chats.set(event.event.chat, this.newChat(event.event.chat, false));
+                    return {
+                        chats: prevState.chats
+                    }
+                });
                 break
             case "ChatRemovedEvent":
+                this.setState((prevState) => {
+                    prevState.chats = prevState.chats.delete(event.event.chat);
+                    return {
+                        chats: prevState.chats
+                    }
+                });
                 break
             case "MessageEvent":
-                console.log("MessageEvent")
                 this.setState((prevState) => {
                     let chat = prevState.chats.get(event.event.chat);
                     if (!chat) chat = this.newChat(event.event.chat, false);
@@ -82,6 +91,7 @@ class Chat extends React.Component {
                 });
                 break
             default:
+                break
         }
     }
 
