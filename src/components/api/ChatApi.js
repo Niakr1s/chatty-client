@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 
-const prefix = "http://127.0.0.1:8080"
+const prefix = "http://localhost:8080"
 
 // returns data
 export function PostMessage(message, onData, onErr) {
