@@ -5,6 +5,7 @@ import ChatInput from "./ChatComponents/ChatInput"
 
 import "./Chat.css"
 import ChatHeader from "./ChatComponents/ChatHeader"
+import ChatInfo from "./ChatComponents/ChatInfo"
 
 import ChatUserList from "./ChatComponents/ChatUserList"
 import ChatChatList from "./ChatComponents/ChatChatList"
@@ -177,7 +178,10 @@ class Chat extends React.Component {
                 let chat = chats.get(chatname)
                 if (chat !== undefined) chat.joined = false  // TODO change on events instead
                 chats = chats.set(chatname, chat)
-                return { chats }
+                let firstActiveChat = chats.find((chat) => chat.joined === true )
+                console.log("firstActiveChat", firstActiveChat)
+                let activeChat = firstActiveChat ? firstActiveChat.chat : "";
+                return { chats, activeChat }
             })
         })
     }
@@ -233,8 +237,10 @@ class Chat extends React.Component {
                             onLogout={this.logout}
                             onLogin={this.login}
                         ></ChatHeader>
-                        {/* TODO add class ChatInfo or something */}
-                        <span className="float-right">{this.state.activeChat && "Chat: " + this.state.activeChat}</span>
+                        <ChatInfo 
+                            activeChat={this.state.activeChat}
+                            leaveChat={this.leaveChat}
+                        ></ChatInfo>
                         <HeaderButtons
                             onAuthClick={() => { this.setState({ showAuthModal: true }) }}
                             onUsersClick={() => { this.setState((prevState) => { return { showUserList: !prevState.showUserList } }) }}
