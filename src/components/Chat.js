@@ -25,7 +25,7 @@ class Chat extends React.Component {
             username: "",
             activeChat: "",
 
-            // { chat: chatname, messages: [ {user, chat, id, text, time} ], joined: bool, users: [ username ]}
+            // { chat: chatname, messages: [id: {user, chat, id, text, time} ], joined: bool, users: [ username ]}
             chats: new SortedMap(),
 
             showAuthModal: false,
@@ -70,6 +70,16 @@ class Chat extends React.Component {
             case "ChatRemovedEvent":
                 break
             case "MessageEvent":
+                console.log("MessageEvent")
+                this.setState((prevState) => {
+                    let chat = prevState.chats.get(event.event.chat);
+                    if (!chat) chat = this.newChat(event.event.chat, false);
+                    chat.messages = chat.messages.set(event.event.id, event.event)
+                    prevState.chats = prevState.chats.set(chat.chat, chat);
+                    return {
+                        chats: prevState.chats
+                    }
+                });
                 break
             default:
         }
