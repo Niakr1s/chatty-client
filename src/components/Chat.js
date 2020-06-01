@@ -25,7 +25,7 @@ class Chat extends React.Component {
             username: "",
             activeChat: "",
 
-            // { chat: chatname, messages: [id: {user, chat, id, text, time} ], joined: bool, users: [ username ]}
+            // { chat: chatname, messages: [id: {user, chat, id, text, time} ], joined: bool, users: [ username ], unread: bool}
             chats: new SortedMap(),
 
             showAuthModal: false,
@@ -35,6 +35,18 @@ class Chat extends React.Component {
     componentDidMount = () => {
         // trying to login
         ChatApi.UserLoginLogged((data) => this.userLogged(data.user))
+    }
+
+    setRead = (chatname) => {
+        this.setState(prevState => {
+            let chat = prevState.chats.get(chatname);
+            if (!chat) return;
+            chat.unread = false;
+            prevState.chats = prevState.chats.set(chatname, chat);
+            return {
+                chats: prevState.chats
+            }
+        })
     }
 
     processEvent = (event) => {
@@ -84,6 +96,9 @@ class Chat extends React.Component {
                     let chat = prevState.chats.get(event.event.chat);
                     if (!chat) chat = this.newChat(event.event.chat, false);
                     chat.messages = chat.messages.set(event.event.id, event.event)
+                    if (prevState.activeChat !== event.event.chat) {
+                        chat.unread = true;
+                    }
                     prevState.chats = prevState.chats.set(chat.chat, chat);
                     return {
                         chats: prevState.chats
@@ -191,7 +206,7 @@ class Chat extends React.Component {
     }
 
     newChat = (chatname, joined) => {
-        return { chat: chatname, messages: new SortedMap(), joined, users: new SortedSet() }
+        return { chat: chatname, messages: new SortedMap(), joined, users: new SortedSet(), unread: 0 }
     }
 
     setActiveChat = (chatname) => {
@@ -199,6 +214,7 @@ class Chat extends React.Component {
     }
 
     render() {
+        console.log(this.state.chats);
         return (
             <div className="chat h100" >
                 <ChatChatList
@@ -208,6 +224,7 @@ class Chat extends React.Component {
                     joinChat={this.joinChat}
                     leaveChat={this.leaveChat}
                     setActiveChat={this.setActiveChat}
+                    setRead={this.setRead}
                 ></ChatChatList>
                 <div className="h100 w100">
                     <div className="flex blue space-between chat-header">

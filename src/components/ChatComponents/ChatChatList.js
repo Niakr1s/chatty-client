@@ -28,11 +28,12 @@ class ChatChatList extends React.Component {
                                 onClick={() => {
                                     if (!chat.joined) { this.props.joinChat(chat.chat) }
                                     else { this.props.setActiveChat(chat.chat) }
+                                    this.props.setRead(chat.chat);
                                 }}>{chatname}
                                 {chat.joined && <span
                                     className="float-right joined"
                                     title="unread counter"
-                                >0</span>}</li> // TODO instead 0 - unread messages
+                                >{chat.unread && "new"}</span>}</li> // TODO instead 0 - unread messages
                         })}
                     </ul>
                     <div className="userlist-footer darkblue"></div>
