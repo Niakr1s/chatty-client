@@ -23,7 +23,7 @@ class AuthRegister extends React.Component {
             email: this.state.email,
             password: this.state.password
         }, (data) => {
-            alert(`registration succesful, activation link sent to ${data.email}`)
+            alert(`Registration succesful, activation link sent to your email. If not recieved - try check spam.`)
             this.props.close();
         }, (error) => {
             this.setState({ error: error.response.data.error })
