@@ -25,6 +25,7 @@ class AuthModal extends React.Component {
         return this.state.showLogin
             ? <AuthLogin
                 change={this.changeToRegister}
+                user={this.props.user}
                 close={this.props.close}
                 login={this.props.login}
             ></AuthLogin>

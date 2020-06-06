@@ -262,6 +262,7 @@ class Chat extends React.Component {
                     chat={this.state.chats.get(this.state.activeChat)}
                 ></ChatUserList>
                 {this.state.showAuthModal ? <AuthModal
+                    user={this.state.user}
                     close={() => this.setState({ showAuthModal: false })}
                     login={this.login}
                 ></AuthModal> : null}

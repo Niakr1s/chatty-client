@@ -16,6 +16,10 @@ class AuthLogin extends React.Component {
     }
 
     getAuthToken = () => {
+        if (this.props.user !== "") {
+            this.setState({ error: `already logged as ${this.props.user}, logout first` })
+            return;
+        }
         Authorize({ user: this.state.user, password: this.state.password }, (data) => {
             this.props.login(data.user);
             this.props.close();
