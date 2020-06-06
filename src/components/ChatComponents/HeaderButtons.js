@@ -7,7 +7,10 @@ class HeaderButtons extends React.Component {
             <div className="chat-header-prompt">
                 <AuthBtn
                     onClick={() => this.props.onAuthClick()}
-                >auth</AuthBtn>
+                ></AuthBtn>
+                <AdminBtn
+                    onClick={() => this.props.onAdminClick()}
+                ></AdminBtn>
             </div>
         )
     }
@@ -20,6 +23,17 @@ class AuthBtn extends React.Component {
                 className="btn lightblue w100"
                 onClick={() => this.props.onClick()}
             >auth</button>
+        )
+    }
+}
+
+class AdminBtn extends React.Component {
+    render = () => {
+        return (
+            <button
+                className="btn lightblue w100"
+                onClick={() => this.props.onClick()}
+            >admin</button>
         )
     }
 }

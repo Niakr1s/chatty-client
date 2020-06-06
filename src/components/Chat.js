@@ -11,6 +11,7 @@ import ChatUserList from "./ChatComponents/ChatUserList"
 import ChatChatList from "./ChatComponents/ChatChatList"
 
 import AuthModal from "./AuthComponents/AuthModal"
+import AdminModal from "./ChatComponents/AdminModal"
 
 import * as ChatApi from './api/ChatApi'
 
@@ -33,6 +34,7 @@ class Chat extends React.Component {
             chats: new SortedMap(),
 
             showAuthModal: false,
+            showAdminModal: false,
         }
     }
 
@@ -54,6 +56,8 @@ class Chat extends React.Component {
     }
 
     processEvent = (event) => {
+        if (!event) return
+
         let loginLogoutEventProcess = (processUsers) => {
             this.setState(prevState => {
                 let chatname = event.event.chat
@@ -65,7 +69,6 @@ class Chat extends React.Component {
                 return { chats }
             });
         }
-
 
         console.log("Start processing event", event)
         switch (event.type) {
@@ -153,6 +156,21 @@ class Chat extends React.Component {
         })
     }
 
+    addChat = (chatname, onSuccess, onErr) => {
+        ChatApi.AddChat(chatname, () => {
+            onSuccess()
+        }, () => {
+            onErr()
+        })
+    }
+
+    delChat = (chatname, onSuccess, onErr) => {
+        ChatApi.DelChat(chatname, () => {
+            onSuccess()
+        }, () => {
+            onErr()
+        })
+    }
 
     userLogged = (user) => {
         console.log(`logged user`, user)
@@ -246,6 +264,12 @@ class Chat extends React.Component {
                         ></ChatInfo>
                         <HeaderButtons
                             onAuthClick={() => { this.setState({ showAuthModal: true }) }}
+                            onAdminClick={() => {
+                                this.setState((prevState) => {
+                                    console.log("admin: ", prevState.admin)
+                                    return { showAdminModal: prevState.admin }
+                                })
+                            }}
                             onUsersClick={() => { this.setState((prevState) => { return { showUserList: !prevState.showUserList } }) }}
                             onChatsClick={() => { this.setState((prevState) => { return { showChatsList: !prevState.showChatsList } }) }}
                         />
@@ -266,6 +290,13 @@ class Chat extends React.Component {
                     close={() => this.setState({ showAuthModal: false })}
                     login={this.login}
                 ></AuthModal> : null}
+                {this.state.showAdminModal && this.state.admin && <AdminModal
+                    admin={this.state.admin}
+                    close={() => this.setState({ showAdminModal: false })}
+                    addChat={this.addChat}
+                    delChat={this.delChat}
+                    chats={this.state.chats}
+                ></AdminModal>}
             </div >
         )
     }

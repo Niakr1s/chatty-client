@@ -148,3 +148,25 @@ export function LeaveChat(chatname, onData, onErr) {
         if (onErr) onErr(error)
     })
 }
+
+export function AddChat(chatname, onData, onErr) {
+    console.log("AddChat start", chatname)
+    return axios.post(prefix + `/api/adminonly/createChat`, { chat: chatname }, { withCredentials: true }).then((response) => {
+        console.log("AddChat succes", chatname, response.data);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("AddChat fail", chatname, error)
+        if (onErr) onErr(error)
+    })
+}
+
+export function DelChat(chatname, onData, onErr) {
+    console.log("DelChat start", chatname)
+    return axios.post(prefix + `/api/adminonly/removeChat`, { chat: chatname }, { withCredentials: true }).then((response) => {
+        console.log("DelChat succes", chatname, response.data);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("DelChat fail", chatname, error)
+        if (onErr) onErr(error)
+    })
+}
