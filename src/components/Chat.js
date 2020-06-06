@@ -23,10 +23,13 @@ class Chat extends React.Component {
         super(props);
 
         this.state = {
-            username: "",
+            user: "",
+            verified: false,
+            admin: false,
+
             activeChat: "",
 
-            // { chat: chatname, messages: [id: {user, chat, id, text, time} ], joined: bool, users: [ username ], unread: bool}
+            // { chat: chatname, messages: [id: {user, chat, id, text, time} ], joined: bool, users: [ {user, verified, admin} ], unread: bool}
             chats: new SortedMap(),
 
             showAuthModal: false,
@@ -35,7 +38,7 @@ class Chat extends React.Component {
 
     componentDidMount = () => {
         // trying to login
-        ChatApi.UserLoginLogged((data) => this.userLogged(data.user))
+        ChatApi.UserLoginLogged((data) => this.userLogged(data))
     }
 
     setRead = (chatname) => {
@@ -59,10 +62,10 @@ class Chat extends React.Component {
                 let chat = chats.get(chatname)
                 if (chat !== undefined && username !== prevState.username) chat.users = processUsers(chat.users)
                 chats = chats.set(chat.chat, chat)
-                return {chats}
+                return { chats }
             });
         }
-        
+
 
         console.log("Start processing event", event)
         switch (event.type) {
@@ -112,7 +115,7 @@ class Chat extends React.Component {
     }
 
     startRequestOnTimeout = (successTimeout, failureTimeout, apiFn, onFailure, onData) => {
-        if (this.state.username === "") {
+        if (this.state.user === "") {
             return;
         }
 
@@ -133,29 +136,29 @@ class Chat extends React.Component {
     }
 
     logout = () => {
-        console.log(`Logouting user:`, this.state.username)
+        console.log(`Logouting user:`, this.state.user)
 
         ChatApi.UserLogout().then(() => {
-            this.setState({ username: "", activeChat: "", chats: new Map() })
+            this.setState({ ...newEmptyUser(), activeChat: "", chats: new Map() })
         })
     }
 
     login = (username) => {
         console.log(`Logging user:`, username)
 
-        ChatApi.UserLogin(username, (data) => this.userLogged(data.user), () => {
-            ChatApi.UserLoginLogged((data) => this.userLogged(data.user), (error) => {
+        ChatApi.UserLogin(username, (data) => this.userLogged(data), () => {
+            ChatApi.UserLoginLogged((data) => this.userLogged(data), (error) => {
                 console.log(`Couldn't login user:`, error)
             })
         })
     }
 
 
-    userLogged = (username) => {
-        console.log(`logged user`, username)
-        this.setState({ username })
+    userLogged = (user) => {
+        console.log(`logged user`, user)
+        this.setState({ ...user })
         this.startRequestOnTimeout(10 * 1000, 10 * 1000, ChatApi.KeepAlive, () => this.logout())
-        this.startRequestOnTimeout(100, 0, ChatApi.Poll, () => this.logout(), this.processEvent )
+        this.startRequestOnTimeout(100, 0, ChatApi.Poll, () => this.logout(), this.processEvent)
         ChatApi.GetChats((chats) => {
             this.setState({ chats: chatReportsArrToMap(chats) })
         })
@@ -178,7 +181,7 @@ class Chat extends React.Component {
                 let chat = chats.get(chatname)
                 if (chat !== undefined) chat.joined = false  // TODO change on events instead
                 chats = chats.set(chatname, chat)
-                let firstActiveChat = chats.find((chat) => chat.joined === true )
+                let firstActiveChat = chats.find((chat) => chat.joined === true)
                 console.log("firstActiveChat", firstActiveChat)
                 let activeChat = firstActiveChat ? firstActiveChat.chat : "";
                 return { chats, activeChat }
@@ -187,11 +190,11 @@ class Chat extends React.Component {
     }
 
     postMessage = (messageText) => {
-        if (!this.state.username) { console.log("Can't post message, no logged user!"); return; }
+        if (!this.state.user) { console.log("Can't post message, no logged user!"); return; }
 
         if (!messageText) { console.log("Can't post empty message!"); return; }
 
-        console.log(`Posting message: "${messageText}" for user`, this.state.username);
+        console.log(`Posting message: "${messageText}" for user`, this.state.user);
         ChatApi.PostMessage({ text: messageText, chat: this.state.activeChat }, (message) => {
             this.appendMessage(message) // TODO remove after impl events
         });
@@ -233,11 +236,11 @@ class Chat extends React.Component {
                 <div className="h100 w100">
                     <div className="flex blue space-between chat-header">
                         <ChatHeader
-                            user={this.state.username}
+                            user={this.state.user}
                             onLogout={this.logout}
                             onLogin={this.login}
                         ></ChatHeader>
-                        <ChatInfo 
+                        <ChatInfo
                             activeChat={this.state.activeChat}
                             leaveChat={this.leaveChat}
                         ></ChatInfo>
@@ -289,6 +292,10 @@ function messArrToMap(messages) {
 
 function usersArrToSet(users) {
     return new SortedSet(users.map(user => user.user))
+}
+
+function newEmptyUser() {
+    return { user: "", admin: false, verified: false }
 }
 
 
