@@ -101,18 +101,7 @@ class Chat extends React.Component {
                 });
                 break
             case "MessageEvent":
-                this.setState((prevState) => {
-                    let chat = prevState.chats.get(event.event.chat);
-                    if (!chat) chat = this.newChat(event.event.chat, false);
-                    chat.messages = chat.messages.set(event.event.id, event.event)
-                    if (prevState.activeChat !== event.event.chat) {
-                        chat.unread = true;
-                    }
-                    prevState.chats = prevState.chats.set(chat.chat, chat);
-                    return {
-                        chats: prevState.chats
-                    }
-                });
+                this.appendMessage(event.event)
                 break
             default:
                 break
@@ -215,25 +204,22 @@ class Chat extends React.Component {
         if (!messageText) { console.log("Can't post empty message!"); return; }
 
         console.log(`Posting message: "${messageText}" for user`, this.state.user);
-        ChatApi.PostMessage({ text: messageText, chat: this.state.activeChat }, (message) => {
-            this.appendMessage(message) // TODO remove after impl events
-        });
+        ChatApi.PostMessage({ text: messageText, chat: this.state.activeChat });
     }
 
     appendMessage = (message) => {
-        this.setState((prevState) => {
-            let chats = prevState.chats
-            let chat = chats.get(message.chat) || this.newChat(message.chat, false)
+        // I think this section should be in setState and working with prevState,
+        // but it cause running twice and I don't know why.
+        let chats = this.state.chats
+        let chat = chats.get(message.chat) || this.newChat(message.chat, false)
+        chat.messages.push(message)
+        chats = chats.set(chat.chat, chat)
 
-            chat.messages = chat.messages.set(message.id, message)
-
-            chats.set(chat.chat, chat)
-            return { chats }
-        })
+        this.setState({ chats })
     }
 
     newChat = (chatname, joined) => {
-        return { chat: chatname, messages: new SortedMap(), joined, users: new SortedSet(), unread: 0 }
+        return { chat: chatname, messages: [], joined, users: new SortedSet(), unread: 0 }
     }
 
     setActiveChat = (chatname) => {
@@ -324,13 +310,9 @@ function chatReportsArrToMap(chatReports) {
 function chatReportToChat(chatReport) {
     return {
         ...chatReport,
-        messages: chatReport.messages === undefined ? new SortedMap() : messArrToMap(chatReport.messages),
+        messages: chatReport.messages === undefined ? [] : chatReport.messages,
         users: chatReport.users == undefined ? new SortedSet() : usersArrToSet(chatReport.users)
     }
-}
-
-function messArrToMap(messages) {
-    return new SortedMap([...messages.map((message) => [message.id, message])])
 }
 
 function usersArrToSet(users) {

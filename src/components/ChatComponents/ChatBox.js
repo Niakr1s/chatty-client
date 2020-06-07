@@ -20,16 +20,15 @@ class ChatBox extends React.Component {
     render = () => {
         return (
             <div className="chatbox overflow-y blue-gradient" ref={this.myRef}
-                onScroll={() => { 
+                onScroll={() => {
                     if (!this.props.chat) return;
                     this.scrolls.set(this.props.chat.chat, this.myRef.current.scrollTop);
-                    }
+                }
                 }>
-                {this.props.chat && [...this.props.chat.messages.keys()].map((k, idx, arr) => {
-                    let m = this.props.chat.messages.get(k)
+                {this.props.chat && this.props.chat.messages.map((m, idx, arr) => {
                     return <ChatLine
                         message={m}
-                        key={k + "_" + m.id.toString()}></ChatLine>
+                        key={idx.toString()}></ChatLine>
                 })}
             </div>
         )
