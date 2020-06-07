@@ -16,6 +16,10 @@ body {
     background-color: rgb(186, 225, 226);
 }
 
+.pink {
+    background-color: rgb(255, 224, 229);
+}
+
 .red {
     background-color: rgb(221, 28, 28)
 }
@@ -105,6 +109,10 @@ body {
 
 .center {
     text-align: center;
+}
+
+.inline-block {
+    display: inline-block;
 }
 
 

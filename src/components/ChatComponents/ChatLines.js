@@ -1,6 +1,6 @@
 import React from 'react'
 
-class ChatLine extends React.Component {
+export class ChatLine extends React.Component {
     render = () => {
         return (
             <div className="chatline lightblue">
@@ -14,11 +14,20 @@ class ChatLine extends React.Component {
     };
 }
 
+export class SysMsgChatLine extends React.Component {
+    render = () => {
+        return (
+            <div className="chatline pink">
+                <div className="chatline-message inline-block">{this.props.message.text}</div>
+                <div className="chatline-time float-right">{timeStr(this.props.message.time)}</div>
+            </div>
+        )
+    };
+}
+
 function timeStr(unixTime) {
     let date = new Date(unixTime * 1000)
     return [date.getHours(), date.getMinutes(), date.getSeconds()].map((n) => {
         return ("00" + n).slice(-2)
     }).join(":")
 }
-
-export default ChatLine

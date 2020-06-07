@@ -333,10 +333,10 @@ function sysMsgToMessage(sysMsg) {
     let msg = sysMsg.event;
     switch (sysMsg.type) {
         case "SystemMessageChatJoinEvent":
-            msg.text = `User ${msg.user} joined chat ${msg.chat}`
+            msg.text = `${msg.user} joined chat ${msg.chat}`
             break
         case "SystemMessageChatLeaveEvent":
-            msg.text = `User ${msg.user} leaved chat ${msg.chat}`
+            msg.text = `${msg.user} leaved chat ${msg.chat}`
             break
         default:
             break

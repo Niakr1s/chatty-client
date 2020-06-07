@@ -1,5 +1,5 @@
 import React from "react"
-import ChatLine from "./ChatLine";
+import * as ChatLines from "./ChatLines";
 
 class ChatBox extends React.Component {
     constructor(props) {
@@ -26,9 +26,16 @@ class ChatBox extends React.Component {
                 }
                 }>
                 {this.props.chat && this.props.chat.messages.map((m, idx, arr) => {
-                    return <ChatLine
-                        message={m}
-                        key={idx.toString()}></ChatLine>
+                    return m.user
+                        ? <ChatLines.ChatLine
+                            message={m}
+                            key={idx.toString()}
+                        ></ChatLines.ChatLine>
+                        : <ChatLines.SysMsgChatLine
+                            message={m}
+                            key={idx.toString()}
+                        >
+                        </ChatLines.SysMsgChatLine>
                 })}
             </div>
         )
