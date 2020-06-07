@@ -12,6 +12,7 @@ import ChatChatList from "./ChatComponents/ChatChatList"
 
 import AuthModal from "./AuthComponents/AuthModal"
 import AdminModal from "./ChatComponents/AdminModal"
+import ResetPassModal from "./ChatComponents/ResetPassModal"
 
 import * as ChatApi from './api/ChatApi'
 
@@ -35,6 +36,7 @@ class Chat extends React.Component {
 
             showAuthModal: false,
             showAdminModal: false,
+            showResetPassModal: true,
         }
     }
 
@@ -297,6 +299,10 @@ class Chat extends React.Component {
                     delChat={this.delChat}
                     chats={this.state.chats}
                 ></AdminModal>}
+                {this.state.showResetPassModal && <ResetPassModal
+                    close={() => this.setState({ showResetPassModal: false })}
+                >
+                </ResetPassModal>}
             </div >
         )
     }

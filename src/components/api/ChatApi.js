@@ -170,3 +170,25 @@ export function DelChat(chatname, onData, onErr) {
         if (onErr) onErr(error)
     })
 }
+
+export function RequestResetPass(username, onData, onErr) {
+    console.log("RequestResetPass start", username);
+    return axios.post(prefix + `/api/requestResetPassword`, { user: username }, { withCredentials: true }).then((response) => {
+        console.log("RequestResetPass succes", username, response.data);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("RequestResetPass fail", username, error.data);
+        if (onErr) onErr(error)
+    })
+}
+
+export function ResetPass(userWithTokenAndPass, onData, onErr) {
+    console.log("ResetPass start", userWithTokenAndPass);
+    return axios.post(prefix + `/api/resetPassword`, { ...userWithTokenAndPass }, { withCredentials: true }).then((response) => {
+        console.log("ResetPass succes", userWithTokenAndPass, response.data);
+        if (onData) onData(response.data)
+    }).catch((error) => {
+        console.log("ResetPass fail", userWithTokenAndPass, error.data);
+        if (onErr) onErr(error)
+    })
+}
