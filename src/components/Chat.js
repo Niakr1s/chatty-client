@@ -103,6 +103,12 @@ class Chat extends React.Component {
             case "MessageEvent":
                 this.appendMessage(event.event)
                 break
+            case "SystemMessageChatJoinEvent":
+                this.appendMessage(sysMsgToMessage(event))
+                break
+            case "SystemMessageChatLeaveEvent":
+                this.appendMessage(sysMsgToMessage(event))
+                break
             default:
                 break
         }
@@ -323,5 +329,20 @@ function newEmptyUser() {
     return { user: "", admin: false, verified: false }
 }
 
+function sysMsgToMessage(sysMsg) {
+    let msg = sysMsg.event;
+    switch (sysMsg.type) {
+        case "SystemMessageChatJoinEvent":
+            msg.text = `User ${msg.user} joined chat ${msg.chat}`
+            break
+        case "SystemMessageChatLeaveEvent":
+            msg.text = `User ${msg.user} leaved chat ${msg.chat}`
+            break
+        default:
+            break
+    }
+    msg.user = undefined
+    return msg
+}
 
 export default Chat
