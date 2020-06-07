@@ -6,6 +6,7 @@ class ChatChatList extends React.Component {
     }
 
     render() {
+        console.log("chatchatlist", this.props.chats)
         return (
             <div
                 id="chat-left-modal"
@@ -21,9 +22,17 @@ class ChatChatList extends React.Component {
                     <ul className="userlist overflow-y blue-gradient">
                         {Array.from(this.props.chats.keys()).map((chatname) => {
                             let chat = this.props.chats.get(chatname)
+                            let spanContents;
+                            if (chat.joined) {
+                                if (chat.unread !== undefined && chat.unread > 0) {
+                                    spanContents = chat.unread;
+                                }
+                            } else {
+                                spanContents = "join"
+                            }
                             return <li
                                 className={"userlist-item lightblue cursor-default " +
-                                        `${(this.props.activeChat === chat.chat) ? "chat-active " : ""}`}
+                                    `${(this.props.activeChat === chat.chat) ? "chat-active " : ""}`}
                                 key={chatname}
                                 onClick={() => {
                                     if (!chat.joined) { this.props.joinChat(chat.chat) }
@@ -33,7 +42,7 @@ class ChatChatList extends React.Component {
                                 <span
                                     className="float-right joined"
                                     title="unread counter"
-                                >{chat.joined ? chat.unread && "new" : "join"}</span></li> // TODO instead 0 - unread messages
+                                >{spanContents}</span></li> // TODO instead 0 - unread messages
                         })}
                     </ul>
                     <div className="userlist-footer darkblue"></div>

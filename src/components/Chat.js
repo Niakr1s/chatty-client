@@ -31,7 +31,10 @@ class Chat extends React.Component {
 
             activeChat: "",
 
-            // { chat: chatname, messages: [id: {user, chat, id, text, time} ], joined: bool, users: [ {user, verified, admin} ], unread: bool}
+            // { chat: chatname, 
+            // messages: [id: {user, chat, id, text, time} ], 
+            // joined: bool, users: [ {user, verified, admin} ], 
+            // unread: number}
             chats: new SortedMap(),
 
             showAuthModal: false,
@@ -49,7 +52,7 @@ class Chat extends React.Component {
         this.setState(prevState => {
             let chat = prevState.chats.get(chatname);
             if (!chat) return;
-            chat.unread = false;
+            chat.unread = 0;
             prevState.chats = prevState.chats.set(chatname, chat);
             return {
                 chats: prevState.chats
@@ -219,6 +222,10 @@ class Chat extends React.Component {
         let chats = this.state.chats
         let chat = chats.get(message.chat) || this.newChat(message.chat, false)
         chat.messages.push(message)
+        if (message.chat !== this.state.activeChat) {
+            chat.unread = chat.unread === undefined ? 1 : chat.unread + 1;
+        }
+        console.log("chat after appendmessage", chat)
         chats = chats.set(chat.chat, chat)
 
         this.setState({ chats })
