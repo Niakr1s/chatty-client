@@ -270,7 +270,8 @@ class Chat extends React.Component {
                         />
                     </div>
                     <ChatBox
-                        chat={this.state.chats.get(this.state.activeChat)}
+                        chats={this.state.chats}
+                        activeChat={this.state.activeChat}
                     ></ChatBox>
                     <ChatInput
                         onPostMessage={this.postMessage}

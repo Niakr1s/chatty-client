@@ -13,18 +13,25 @@ class ChatBox extends React.Component {
     }
 
     componentDidUpdate = () => {
-        if (!this.props.chat) return
+        if (!this.props.activeChat) return
+
+        // clearing scrolls for non-existent chats
+        for (let k of this.scrolls.keys()) {
+            if (!this.props.chats.get(k)) {
+                this.scrolls.delete(k);
+            }
+        }
 
         // removing stick botton if we switched chats and updating lastChatName
-        if (this.lastChatName !== "" && this.props.chat.chat != this.lastChatName) {
+        if (this.lastChatName !== "" && this.props.activeChat != this.lastChatName) {
             let lastScrollStatus = this.getScrollStatus(this.lastChatName)
             lastScrollStatus.stickBottom = false;
             this.scrolls.set(this.lastChatName, lastScrollStatus)
         }
-        this.lastChatName = this.props.chat.chat
+        this.lastChatName = this.props.activeChat
 
         // scrolling to last scroll height, it will call onScroll event, that will update scrollStatus
-        let scrollStatus = this.getScrollStatus(this.props.chat.chat)
+        let scrollStatus = this.getScrollStatus(this.props.activeChat)
         if (scrollStatus.stickBottom) {
             this.myRef.current.scrollTop = this.myRef.current.scrollHeight
         } else { this.myRef.current.scrollTop = scrollStatus.scrollTop; }
@@ -41,17 +48,19 @@ class ChatBox extends React.Component {
     }
 
     render = () => {
+        let chat = this.props.chats.get(this.props.activeChat)
         return (
             <div className="chatbox overflow-y blue-gradient" ref={this.myRef}
                 onScroll={() => {
-                    if (!this.props.chat) return;
-                    this.scrolls.set(this.props.chat.chat, {
+                    console.log("onScroll", chat)
+                    if (!chat) return;
+                    this.scrolls.set(chat.chat, {
                         scrollTop: this.myRef.current.scrollTop, //+ this.myRef.current.offsetHeight + 2,
                         stickBottom: this.myRef.current.scrollTop + this.myRef.current.offsetHeight + 2 >= this.myRef.current.scrollHeight
                     })
                 }
                 }>
-                {this.props.chat && this.props.chat.messages.map((m, idx, arr) => {
+                {chat && chat.messages.map((m, idx, arr) => {
                     return m.user
                         ? <ChatLines.ChatLine
                             message={m}
