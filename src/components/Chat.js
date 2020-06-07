@@ -36,7 +36,7 @@ class Chat extends React.Component {
 
             showAuthModal: false,
             showAdminModal: false,
-            showResetPassModal: true,
+            showResetPassModal: false,
         }
     }
 
@@ -265,6 +265,7 @@ class Chat extends React.Component {
                             leaveChat={this.leaveChat}
                         ></ChatInfo>
                         <HeaderButtons
+                            admin={this.state.admin}
                             onAuthClick={() => { this.setState({ showAuthModal: true }) }}
                             onAdminClick={() => {
                                 this.setState((prevState) => {
@@ -291,12 +292,16 @@ class Chat extends React.Component {
                     user={this.state.user}
                     close={() => this.setState({ showAuthModal: false })}
                     login={this.login}
+                    showResetPassModal={() => {
+                        this.setState({ showResetPassModal: true })
+                    }}
                 ></AuthModal> : null}
                 {this.state.showAdminModal && this.state.admin && <AdminModal
                     admin={this.state.admin}
                     close={() => this.setState({ showAdminModal: false })}
                     addChat={this.addChat}
                     delChat={this.delChat}
+
                     chats={this.state.chats}
                 ></AdminModal>}
                 {this.state.showResetPassModal && <ResetPassModal

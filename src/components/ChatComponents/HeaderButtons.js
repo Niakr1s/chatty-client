@@ -8,9 +8,9 @@ class HeaderButtons extends React.Component {
                 <AuthBtn
                     onClick={() => this.props.onAuthClick()}
                 ></AuthBtn>
-                <AdminBtn
+                {this.props.admin && <AdminBtn
                     onClick={() => this.props.onAdminClick()}
-                ></AdminBtn>
+                ></AdminBtn>}
             </div>
         )
     }

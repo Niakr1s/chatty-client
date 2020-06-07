@@ -1,6 +1,7 @@
 import React from "react"
 
 import ModalCloseButton from "./ModalCloseButton"
+import ForgotPasswordBtn from "./ForgotPasswordBtn"
 import { Authorize } from "../api/ChatApi"
 
 class AuthLogin extends React.Component {
@@ -80,6 +81,12 @@ class AuthLogin extends React.Component {
                             }}
                         >login</button>
                     </div>
+                    <ForgotPasswordBtn
+                        onClick={() => {
+                            this.props.close();
+                            this.props.showResetPassModal();
+                        }}
+                    ></ForgotPasswordBtn>
                     <div className="modal-error">
                         {this.state.error}
                     </div>

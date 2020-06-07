@@ -28,6 +28,7 @@ class AuthModal extends React.Component {
                 user={this.props.user}
                 close={this.props.close}
                 login={this.props.login}
+                showResetPassModal={this.props.showResetPassModal}
             ></AuthLogin>
             : <AuthRegister
                 change={this.changeToLogin}
@@ -37,14 +38,7 @@ class AuthModal extends React.Component {
 
     render = () => {
         return (
-            <div
-                id="modal"
-                className="modal"
-                onClick={(event) => {
-                    if (event.target.id === "modal")
-                        this.props.close();
-                }}
-            >
+            <div className="modal" >
                 {this.innerComponent()}
             </div>
         )
