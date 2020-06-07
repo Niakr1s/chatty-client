@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Icon } from 'semantic-ui-react'
+import ModalCloseButton from '../AuthComponents/ModalCloseButton'
 
 class AdminModel extends React.Component {
     constructor(props) {
@@ -85,19 +85,13 @@ class AdminModel extends React.Component {
                 </tr>
             </table>
             {this.state.err && this.error()}
+            <ModalCloseButton onClick={this.props.close}></ModalCloseButton>
         </div >
     }
 
     render = () => {
         return (
-            <div
-                id="admin_modal"
-                className="modal"
-                onClick={(event) => {
-                    if (event.target.id === "admin_modal")
-                        this.props.close();
-                }}
-            >
+            <div className="modal" >
                 {this.innerComponent()}
             </div>
         )
