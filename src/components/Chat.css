@@ -24,6 +24,10 @@ body {
     background-color: rgb(221, 28, 28)
 }
 
+.color-bot {
+    background-color: rgb(202, 215, 233);
+}
+
 .blue-gradient {
     background: rgb(15, 28, 73);
     background: linear-gradient(0deg, rgba(15, 28, 73, 1) 0%, rgba(107, 125, 212, 1) 50%);

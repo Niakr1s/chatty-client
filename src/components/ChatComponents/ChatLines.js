@@ -4,7 +4,7 @@ import { Icon } from 'semantic-ui-react'
 export class ChatLine extends React.Component {
     render = () => {
         return (
-            <div className="chatline lightblue">
+            <div className={"chatline " + (this.props.message.bot ? "color-bot" : "lightblue")}>
                 <div className="chatline-header">
                     <div
                         className="chatline-user"
@@ -15,7 +15,7 @@ export class ChatLine extends React.Component {
                     <div className="chatline-time">{timeStr(this.props.message.time)}</div>
                 </div>
                 <div className="chatline-message">{this.props.message.text}</div>
-            </div>
+            </div >
         )
     };
 }
