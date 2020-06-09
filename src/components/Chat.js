@@ -82,7 +82,7 @@ class Chat extends React.Component {
             case "LogoutEvent":
                 break
             case "ChatJoinEvent":
-                loginLogoutEventProcess((users) => users.add(event.event.user))
+                loginLogoutEventProcess((users) => users.set(event.event.user, event.event))
                 break
             case "ChatLeaveEvent":
                 loginLogoutEventProcess((users) => users.delete(event.event.user))
@@ -232,7 +232,7 @@ class Chat extends React.Component {
     }
 
     newChat = (chatname, joined) => {
-        return { chat: chatname, messages: [], joined, users: new SortedSet(), unread: 0 }
+        return { chat: chatname, messages: [], joined, users: new SortedMap(), unread: 0 }
     }
 
     setActiveChat = (chatname) => {
@@ -322,15 +322,18 @@ function chatReportsArrToMap(chatReports) {
 }
 
 function chatReportToChat(chatReport) {
+    console.log("chatreporttochat", chatReport)
     return {
         ...chatReport,
         messages: chatReport.messages === undefined ? [] : chatReport.messages,
-        users: chatReport.users == undefined ? new SortedSet() : usersArrToSet(chatReport.users)
+        users: chatReport.users == undefined ? new SortedMap() : usersArrToMap(chatReport.users)
     }
 }
 
-function usersArrToSet(users) {
-    return new SortedSet(users.map(user => user.user))
+function usersArrToMap(users) {
+    let usersKV = users.map(user => { return [user.user, user] })
+    let res = new SortedMap(usersKV)
+    return res
 }
 
 function newEmptyUser() {

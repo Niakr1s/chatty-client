@@ -1,11 +1,17 @@
 import React from 'react'
+import { Icon } from 'semantic-ui-react'
 
 export class ChatLine extends React.Component {
     render = () => {
         return (
             <div className="chatline lightblue">
                 <div className="chatline-header">
-                    <div className="chatline-user">{this.props.message.user}</div>
+                    <div
+                        className="chatline-user"
+                    >
+                        {this.props.message.user}
+                        {this.props.message.verified && <Icon name="check" className="green float-right" title="verified"></Icon>}
+                    </div>
                     <div className="chatline-time">{timeStr(this.props.message.time)}</div>
                 </div>
                 <div className="chatline-message">{this.props.message.text}</div>

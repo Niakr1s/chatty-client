@@ -1,5 +1,5 @@
 import React from "react"
-import { SortedSet } from "immutable-sorted"
+import { Icon } from 'semantic-ui-react'
 
 class ChatUserList extends React.Component {
     constructor(props) {
@@ -7,8 +7,14 @@ class ChatUserList extends React.Component {
     }
 
     makeUserList = () => {
-        let res = this.props.chat && this.props.chat.users && [...this.props.chat.users].map((username) => {
-            return <li className="userlist-item lightblue" key={username}>{username}</li>
+        console.log("make user list", this.props.chat)
+        let res = this.props.chat && this.props.chat.users && [...this.props.chat.users.values()].map((user) => {
+            return <li
+                className="userlist-item lightblue"
+                key={user.user}
+            >
+                {user.user}{user.verified && <Icon name="check" className="green float-right" title="verified"></Icon>}
+            </li>
         })
         return res
     }
