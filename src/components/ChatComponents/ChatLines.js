@@ -31,6 +31,17 @@ export class SysMsgChatLine extends React.Component {
     };
 }
 
+
+export class Motd extends React.Component {
+    render = () => {
+        return (
+            <div className="chatline lightblue">
+                <div className="chatline-message inline-block">{this.props.contents}</div>
+            </div>
+        )
+    };
+}
+
 function timeStr(unixTime) {
     let date = new Date(unixTime * 1000)
     return [date.getHours(), date.getMinutes(), date.getSeconds()].map((n) => {

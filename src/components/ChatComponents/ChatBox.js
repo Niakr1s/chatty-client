@@ -10,6 +10,13 @@ class ChatBox extends React.Component {
         this.myRef = React.createRef();
 
         this.lastChatName = "";
+
+        this.motd = [
+            `Welcome to chatty!`,
+            `You can freely login without authorization and start talking, but authorization gives feature to reserve your nickname only for you.`,
+            `Note: chatty uses cookies to provide it's basic functionality, by using chatty you automatically agree with our cookie policy.`,
+            `We have bot running, simply write "/help" command to learn about available commands.`,
+        ]
     }
 
     componentDidUpdate = () => {
@@ -60,18 +67,22 @@ class ChatBox extends React.Component {
                     })
                 }
                 }>
-                {chat && chat.messages.map((m, idx, arr) => {
-                    return m.user
-                        ? <ChatLines.ChatLine
-                            message={m}
-                            key={idx.toString()}
-                        ></ChatLines.ChatLine>
-                        : <ChatLines.SysMsgChatLine
-                            message={m}
-                            key={idx.toString()}
-                        >
-                        </ChatLines.SysMsgChatLine>
-                })}
+                {
+                    chat ? chat.messages.map((m, idx, arr) => {
+                        return m.user
+                            ? <ChatLines.ChatLine
+                                message={m}
+                                key={idx.toString()}
+                            ></ChatLines.ChatLine>
+                            : <ChatLines.SysMsgChatLine
+                                message={m}
+                                key={idx.toString()}
+                            >
+                            </ChatLines.SysMsgChatLine>
+                    }) : this.motd.map((contents) => {
+                        return <ChatLines.Motd contents={contents}></ChatLines.Motd>
+                    })
+                }
             </div>
         )
     }

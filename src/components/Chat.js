@@ -252,7 +252,7 @@ class Chat extends React.Component {
                     setActiveChat={this.setActiveChat}
                     setRead={this.setRead}
                 ></ChatChatList>
-                <div className="h100 w100">
+                <div className="h100 w100 darkblue">
                     <div className="flex blue space-between chat-header">
                         <ChatHeader
                             user={this.state.user}
@@ -280,9 +280,9 @@ class Chat extends React.Component {
                         chats={this.state.chats}
                         activeChat={this.state.activeChat}
                     ></ChatBox>
-                    <ChatInput
+                    {this.state.activeChat !== "" && <ChatInput
                         onPostMessage={this.postMessage}
-                    ></ChatInput>
+                    ></ChatInput>}
                 </div >
                 <ChatUserList
                     close={() => this.setState({ showUserList: false })}
